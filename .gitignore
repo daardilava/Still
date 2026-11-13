@@ -1,0 +1,4 @@
+node_modules/
+public/artifact.html
+.DS_Store
+*.log
