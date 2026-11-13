@@ -1,8 +1,16 @@
 # Still — clickable MVP prototype
 
 A click-through prototype of the Still meditation app: neumorphic (soft UI) design, light and dark mode,
-iOS and Android looks, and Mo the moon-pebble mascot, animated throughout. All data is sample data;
-nothing is sent anywhere.
+iOS and Android looks, and Mo the moon-pebble mascot, animated throughout. All data is sample data
+and stays in your browser. The only exception: when the page runs inside Claude (as a published
+artifact), the AI features send what you write to Claude to write your session, chapter or letter;
+on localhost they use a built-in writer and nothing leaves your machine.
+
+Version history and feature notes for each version (v2 to v10) are further down.
+
+## Rebuild after editing `src/`
+
+`npm install` then `npm run build` (esbuild bundles `src/` into `public/app.js`).
 
 ## Run it on localhost (no install needed)
 
@@ -27,7 +35,7 @@ Desktop: the panel beside the phone. Phone: Settings › Prototype controls.
 
 Splash · Welcome (Mo waves) · Goals · Create account (Apple / Google / email) · Email sign-up with validation ·
 Sign in (type the password `wrong` to see the error) · Forgot password · Daily reminder + notification
-permission prompt · Paywall (Still Plus, trial, restore) · Home · Search (loading, results, empty state) ·
+permission prompt · Paywall (Still Plus, trial, restore) · Home · Explore (loading, results, empty state) ·
 Session detail (save, download, Plus lock, offline block) · Player (Mo is the breathing guide, real timer,
 ±15 s, sleep timer sheet, audio output sheet, end/leave confirmations) · Session complete (confetti, streak,
 mood check-in) · Silent timer · Profile & progress · Settings (dark mode toggle + match device, reminder,
