@@ -1,2 +1,2 @@
-/* Figtree, self-hosted (no request to Google). Put Figtree-Variable.woff2 in public/fonts/ (free, SIL OFL: fonts.google.com/specimen/Figtree). Until then the phone's system font is used. */
+/* Figtree, self-hosted from public/fonts/ (no request to Google; SIL OFL). */
 @font-face{font-family:'Figtree';src:url('fonts/Figtree-Variable.woff2') format('woff2-variations'),url('fonts/Figtree-Variable.woff2') format('woff2');font-weight:300 900;font-style:normal;font-display:swap}

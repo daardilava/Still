@@ -42,16 +42,16 @@ export const findProgram = (id) => PROGRAMS.find((p) => p.id === id);
 
 /* ---------- Sleep stories (one free sample) ---------- */
 export const STORIES = [
-  { id: 'lake', title: 'Mo and the Still Lake', narrator: '[NARRATOR NAME]', min: 18, img: IMG.night, pos: 'center 60%', plus: false,
+  { id: 'lake', title: 'Mo and the Still Lake', narrator: 'Ines Calder', min: 18, img: IMG.night, pos: 'center 60%', plus: false,
     blurb: 'Mo drifts across a quiet lake at night, counting slow ripples until everything is still.',
     lines: ['The lake was very quiet that night, and the moon sat low above the hills.', 'Mo floated near the shore, glowing softly, the way Mo always did when the day was done.', 'A small ripple spread out across the water. Then another, slower than the first.', 'Mo began to count them. One… and a long, easy pause… two…', 'Somewhere a reed bent in the breeze and straightened again.', 'The ripples grew wider and lazier, until they were hard to tell apart from the water itself.', 'Mo’s glow dimmed a little, like a lamp turned down for the night.', 'And the lake, and the hills, and Mo, were still.'] },
-  { id: 'lighthouse', title: 'The Lighthouse Garden', narrator: '[NARRATOR NAME]', min: 24, img: IMG.land, pos: 'right 75%', plus: true,
+  { id: 'lighthouse', title: 'The Lighthouse Garden', narrator: 'Theo Marsh', min: 24, img: IMG.land, pos: 'right 75%', plus: true,
     blurb: 'An old keeper tends a small garden by the sea while the light turns slowly through the night.',
     lines: ['At the end of the path there was a lighthouse, and beside it, a garden.', 'The keeper walked its rows each evening with a small watering can.', 'Above, the great light turned, once, and once again, never in a hurry.', 'Lavender, then rosemary, then a row of sleepy poppies, already closed.', 'The sea breathed against the rocks below. In, and out.', 'When the last plant was watered, the keeper sat on the bench by the door.', 'The light went on turning, keeping watch, so nobody else had to.'] },
-  { id: 'train', title: 'The Slow Night Train', narrator: '[NARRATOR NAME]', min: 30, img: IMG.night, pos: 'right 70%', plus: true,
+  { id: 'train', title: 'The Slow Night Train', narrator: 'Amara Lowe', min: 30, img: IMG.night, pos: 'right 70%', plus: true,
     blurb: 'A sleeper train winds through snowy valleys. Nobody on board is in a hurry.',
     lines: ['The night train left the city just after dark.', 'In your small cabin the blanket is heavy and warm, and the lamp is turned low.', 'Outside, snow falls past the window in slow, soft lines.', 'The wheels keep their gentle rhythm. Da-dum… da-dum…', 'A village slides by, a few lit windows, then only fields again.', 'The train leans into a long, slow curve through the valley.', 'There is nowhere you need to be until morning.'] },
-  { id: 'reading', title: 'Rain on the Reading Room', narrator: '[NARRATOR NAME]', min: 22, img: IMG.room, pos: 'center 55%', plus: true,
+  { id: 'reading', title: 'Rain on the Reading Room', narrator: 'June Okafor', min: 22, img: IMG.room, pos: 'center 55%', plus: true,
     blurb: 'An old library after closing time, a chair by the window and rain on the glass.',
     lines: ['The library closed at six, but you were allowed to stay a while.', 'Rain tapped at the tall windows, steady and soft.', 'You found the deep chair by the radiator, the one nobody else ever chose.', 'The pages of your book felt thin and cool between your fingers.', 'Down the long room, a lamp clicked off, then another.', 'The rain kept going, patient, filling the quiet.'] }
 ];
@@ -148,9 +148,9 @@ export const GOALS = [
 export const WEEK = [['M', 10], ['T', 15], ['W', 5], ['T', 20], ['F', 10], ['S', 12], ['S', 0]];
 
 export const TIPS = [
-  'Mo says: three slow breaths count. You don’t need a full session to begin.',
-  'Mo says: if your mind wanders, that’s not failing — noticing it is the practice.',
-  'Mo says: a longer out-breath tells your body it’s safe to rest.'
+  'Three slow breaths count. You don’t need a full session to begin.',
+  'If your mind wanders, that’s not failing. Noticing it is the practice.',
+  'A longer out-breath tells your body it’s safe to rest.'
 ];
 
 export const SOUNDS = { Silence: 'transparent', Rain: '#8C7BE0', Forest: '#2E8A73', Ocean: '#5B8FD9' };

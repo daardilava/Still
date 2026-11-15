@@ -5,22 +5,30 @@ import { Mo } from '../mo.jsx';
 import { PATTERNS, PACES, customPattern, SCRIPT, findSession } from '../data.js';
 
 /* ---------- Sound mixer ---------- */
-export function SoundsSheet({ timer }) {
+/* Changes play live. Without onChange it edits your saved mix (guided sessions);
+   with value/onChange (the timer) it changes only the current run. */
+export function SoundsSheet({ timer, value, onChange }) {
   const { s, set } = useApp();
-  const mix = s.mix;
-  const put = (k) => (v) => set((prev) => ({ mix: { ...prev.mix, [k]: v } }));
+  const [local, setLocal] = useState(value || null);
+  const mix = local || s.mix;
+  const put = (k) => (v) => {
+    if (onChange) { const next = { ...mix, [k]: v }; setLocal(next); onChange(next); }
+    else set((prev) => ({ mix: { ...prev.mix, [k]: v } }));
+  };
   const fmt = (v) => (v === 0 ? 'Off' : v + '%');
   return (
     <>
       <div className="grabber" />
-      <SheetTitle title="Sounds" sub="Mix the guide’s voice with background sounds." />
+      <SheetTitle title="Sounds" sub={timer ? 'Background sounds for this timer.' : 'Mix the guide’s voice with background sounds.'} />
       <div className="pressed col" style={{ gap: 18, marginTop: 16, padding: '18px 18px 14px', borderRadius: 26 }}>
         {!timer ? <Slider label="Voice" value={mix.voice} onChange={put('voice')} format={fmt} /> : null}
         <Slider label="Rain" value={mix.rain} onChange={put('rain')} format={fmt} />
         <Slider label="Forest" value={mix.forest} onChange={put('forest')} format={fmt} />
         <Slider label="Ocean" value={mix.ocean} onChange={put('ocean')} format={fmt} />
       </div>
-      <button className="btn-text" style={{ marginTop: 6 }} onClick={() => set({ mix: { voice: 80, rain: 30, forest: 0, ocean: 0 } })}>Reset to default</button>
+      {onChange
+        ? <button className="btn-text" style={{ marginTop: 6 }} onClick={() => { setLocal(value); onChange(value); }}>Undo changes</button>
+        : <button className="btn-text" style={{ marginTop: 6 }} onClick={() => set({ mix: { voice: 80, rain: 30, forest: 0, ocean: 0 } })}>Reset to default</button>}
     </>
   );
 }

@@ -10,6 +10,7 @@ import { QuietLabel, QuietNudge } from './quiet.jsx';
 import { MoreSheet } from './more.jsx';
 import { getTts } from '../ai.js';
 import { moodOK, NeedsChoice } from './privacy.jsx';
+import { setAmbience, stopAmbience, mixFor, warmAmbience } from '../sound.js';
 
 /* ---------- Session detail ---------- */
 export function Session({ id }) {
@@ -17,6 +18,8 @@ export function Session({ id }) {
   const ses = findSession(id) || findSession('unwind');
   const [len, setLen] = useState(ses.lengths.includes(s.defaultLen) ? s.defaultLen : ses.lengths[Math.min(1, ses.lengths.length - 1)]);
   const [dl, setDl] = useState(0);
+  /* Get the background sounds of your mix ready while you read, so Begin starts them instantly. */
+  useEffect(() => { warmAmbience(['rain', 'forest', 'ocean'].filter((k) => s.mix[k] > 0)); }, []);
   const saved = s.saved.includes(ses.id);
   const downloaded = s.downloads.includes(ses.id);
   const locked = ses.plus && !s.user.plus;
@@ -33,10 +36,19 @@ export function Session({ id }) {
   return (
     <div className="pad">
       <TopBar right={
-        <button className={'icon-btn press' + (saved ? ' on' : '')} aria-label={saved ? 'Remove from saved' : 'Save session'} aria-pressed={saved}
-          onClick={() => { set({ saved: saved ? s.saved.filter((x) => x !== ses.id) : [...s.saved, ses.id] }); toast(saved ? 'Removed from saved.' : 'Saved to your profile.'); }}>
-          <Icon name={saved ? 'bookmark-fill' : 'bookmark'} />
-        </button>} />
+        <span className="row" style={{ gap: 12 }}>
+          {/* Download sits up here with Save, so Begin is the only big button on the screen. */}
+          <button className={'icon-btn press' + (downloaded ? ' on' : '')} disabled={dl > 0}
+            aria-label={dl > 0 ? `Downloading, ${Math.round(dl * 100)}%` : downloaded ? 'Available offline. Manage downloads' : 'Download for offline'}
+            onClick={downloaded ? () => nav.push('downloads') : download}>
+            {dl > 0 ? <span className="tnum" style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--accent)' }}>{Math.round(dl * 100)}%</span>
+              : <Icon name="download" sw={downloaded ? 2.4 : 2} />}
+          </button>
+          <button className={'icon-btn press' + (saved ? ' on' : '')} aria-label={saved ? 'Remove from saved' : 'Save session'} aria-pressed={saved}
+            onClick={() => { set({ saved: saved ? s.saved.filter((x) => x !== ses.id) : [...s.saved, ses.id] }); toast(saved ? 'Removed from saved.' : 'Saved to your profile.'); }}>
+            <Icon name={saved ? 'bookmark-fill' : 'bookmark'} />
+          </button>
+        </span>} />
       <div className="raised frame" style={{ marginTop: 18 }}>
         <div className="frame-in" style={{ height: 240 }}><img src={ses.img} alt="" style={{ objectPosition: ses.pos }} /></div>
       </div>
@@ -46,16 +58,13 @@ export function Session({ id }) {
         {locked ? <span className="tag plus"><Icon name="crown" size={11} sw={2.4} />Plus</span> : null}
       </div>
       <h1 className="h1" style={{ marginTop: 12, fontSize: '1.75rem' }}>{ses.title}</h1>
-      <p className="muted" style={{ margin: '4px 0 0', fontSize: '0.9375rem' }}>Guided by [GUIDE NAME]</p>
+      <p className="muted" style={{ margin: '4px 0 0', fontSize: '0.9375rem' }}>Guided by Ines Calder</p>
       <p style={{ margin: '12px 0 0', fontSize: '0.9375rem', lineHeight: 1.5, color: 'var(--body)' }}>{ses.desc}</p>
       {ses.lengths.length > 1 ? (
         <div style={{ marginTop: 18 }}>
           <Segment label="Session length" options={ses.lengths.map((m) => ({ value: m, label: m + ' min' }))} value={len} onChange={setLen} />
         </div>
       ) : null}
-      <button className="btn btn-soft press" style={{ marginTop: 16, height: 52 }} onClick={downloaded ? () => nav.push('downloads') : download} disabled={dl > 0}>
-        {dl > 0 ? <><Spinner /> Downloading {Math.round(dl * 100)}%</> : downloaded ? <><Icon name="check" sw={2.4} />Available offline</> : <><Icon name="download" />Download for offline</>}
-      </button>
       <div className="grow" style={{ minHeight: 16 }} />
       {offlineBlocked ? <p className="muted" style={{ textAlign: 'center', fontSize: '0.8125rem', margin: '0 0 10px' }} role="status">You’re offline and this session isn’t downloaded.</p> : null}
       <button className="btn btn-primary press" disabled={offlineBlocked}
@@ -90,7 +99,7 @@ function OutputSheet() {
     <>
       <div className="grabber" />
       <SheetTitle title={platform === 'ios' ? 'AirPlay' : 'Play on'} sub="Choose where the audio plays." />
-      <OptionList label="Audio output" options={['This phone', 'Headphones', '[SPEAKER NAME]']} value={v} onChange={(x) => { setV(x); toast('Playing on ' + x + '.'); setTimeout(closeSheet, 250); }} />
+      <OptionList label="Audio output" options={['This phone', 'Headphones', 'Living room speaker']} value={v} onChange={(x) => { setV(x); toast('Playing on ' + x + '.'); setTimeout(closeSheet, 250); }} />
     </>
   );
 }
@@ -105,6 +114,16 @@ export function Player({ id, minutes = 12, timer = false, sound = 'Silence', onb
   const [asking, setAsking] = useState(!onboarding && !timer && s.checkIn !== false && !startAt && moodOK(s));
   const [playing, setPlaying] = useState(!asking);
   const answer = (mood) => { set({ pre: mood ? { mood, t: Date.now() } : null }); setAsking(false); setPlaying(true); setPoke((p) => p + 1); };
+
+  /* Background sounds. Guided sessions use your saved mix (Sounds sheet); the timer uses the sound or
+     soundscape it was started with, adjustable for this run only. They fade with play/pause and on exit. */
+  const [timerMix, setTimerMix] = useState(() => mixFor(sound, s.mixes));
+  const amb = timer ? timerMix : s.mix;
+  useEffect(() => {
+    if (playing && !asking) setAmbience(amb, 1.5);
+    else stopAmbience(0.8);
+  }, [playing, asking, amb.rain, amb.forest, amb.ocean]);
+  useEffect(() => () => stopAmbience(2), []);
 
   /* Personal sessions: Mo reads each paragraph aloud when its moment comes (Claude voice when the page runs in Claude). */
   const lines = ses && ses.lines ? ses.lines : null;
@@ -198,7 +217,7 @@ export function Player({ id, minutes = 12, timer = false, sound = 'Silence', onb
     <div className="pad" style={{ alignItems: 'center' }} onPointerDown={() => setPoke((p) => p + 1)} onKeyDown={() => setPoke((p) => p + 1)}>
       <div className="row" style={{ width: '100%', justifyContent: 'space-between' }}>
         <button className="icon-btn press" aria-label="Close player" onClick={quit}><Icon name={platform === 'ios' ? 'down' : 'back_android'} sw={2.2} /></button>
-        <QuietLabel text={timer ? 'Silent timer' : onboarding ? 'Your first session' : 'Now playing'} />
+        <QuietLabel text={timer ? (timerMix.rain + timerMix.forest + timerMix.ocean > 0 ? 'Timer' : 'Silent timer') : onboarding ? 'Your first session' : 'Now playing'} />
         {ses && !onboarding ? (
           <button className={'icon-btn press' + (saved ? ' on' : '')} aria-label={saved ? 'Remove from saved' : 'Save session'} aria-pressed={!!saved}
             onClick={() => set({ saved: saved ? s.saved.filter((x) => x !== ses.id) : [...s.saved, ses.id] })}><Icon name={saved ? 'heart-fill' : 'heart'} /></button>
@@ -232,7 +251,7 @@ export function Player({ id, minutes = 12, timer = false, sound = 'Silence', onb
       <div className="row ctrls" style={{ width: '100%', justifyContent: 'space-between', marginTop: 20, padding: '0 6px' }}>
         <button className={'icon-btn press ctrl-skip' + (sleepTimer !== 'Off' || showText ? ' on' : '')} style={{ width: 56, height: 56, color: 'var(--accent)' }} aria-label="More controls" aria-haspopup="dialog"
           onClick={() => sheet(<MoreSheet title={timer ? 'Timer controls' : 'Session controls'} items={[
-            { icon: 'wave', label: 'Sounds', onClick: () => sheet(<SoundsSheet timer={timer} />) },
+            { icon: 'wave', label: 'Sounds', onClick: () => sheet(timer ? <SoundsSheet timer value={timerMix} onChange={setTimerMix} /> : <SoundsSheet />) },
             timer ? { icon: 'moon', label: 'Dim now', onClick: () => setDimmed(true) } : { icon: 'doc', label: 'Read along', on: showText, onClick: () => setShowText(true) },
             { icon: 'pulse', label: 'Pace', disabled: timer || fixed || !!lines, onClick: () => (timer ? toast('The silent timer has no breathing guide.') : lines ? toast('Mo sets the pace in personal sessions.') : fixed ? toast('Box Breathing always uses the 4 · 4 · 4 · 4 rhythm.') : sheet(<PaceSheet />)) },
             { icon: 'clock', label: 'Sleep timer', value: sleepTimer !== 'Off' ? sleepTimer : null, onClick: () => sheet(<SleepSheet value={sleepTimer} onPick={setSleepTimer} />) },

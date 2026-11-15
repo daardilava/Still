@@ -148,7 +148,7 @@ export function EditProfile() {
       <div style={{ alignSelf: 'center', marginTop: 20 }}><MoAvatar size={116} bg={bg} /></div>
       <p className="muted" style={{ textAlign: 'center', margin: '12px 0 6px', fontSize: '0.8125rem', fontWeight: 700 }}>Your Mo. Change what Mo wears in Mo’s collection.</p>
       <BgPicker value={bg} onChange={setBg} />
-      <Field label="Name" value={name} onChange={setName} placeholder="[YOUR NAME]" autoComplete="name" />
+      <Field label="Name" value={name} onChange={setName} placeholder="e.g. Sam" autoComplete="name" />
       {s.user.signedIn ? <Field label="Email" type="email" value={email} onChange={setEmail} autoComplete="email" error={valid ? '' : 'Enter a valid email address.'} /> : (
         <p className="muted" style={{ fontSize: '0.875rem', lineHeight: 1.45, marginTop: 18 }}>You’re using Still as a guest. <button className="btn-text" style={{ minHeight: 0, padding: 0 }} onClick={() => nav.push('account')}>Create an account</button> to keep your progress.</p>
       )}

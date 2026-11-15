@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useApp, TabBar, OptionList, SheetTitle } from '../ui.jsx';
+import { useApp, TabBar, OptionList, SheetTitle, SwitchRow } from '../ui.jsx';
 import { Icon } from '../icons.jsx';
 import { Mo } from '../mo.jsx';
 import { SESSIONS, PROGRAMS, STORIES, UNLOCKS, CATS, TIPS, SOUNDS, IMG, GOAL_CAT, MOOD_COLORS, LENGTHS, findSession, fmt, weekKey } from '../data.js';
@@ -10,6 +10,7 @@ import { JourneyTiles, TapMo } from './journey.jsx';
 import { ComposeEntry } from './compose.jsx';
 import { PracticesRow } from './practices.jsx';
 import { TopBar } from '../ui.jsx';
+import { previewAmbience, stopAmbience, mixFor, warmAmbience } from '../sound.js';
 import { MoAvatar, sinceLine, IntentionSheet, GoalSheet, GoalRing, MoonCalendar, Milestones, milestones } from './profile.jsx';
 const milestoneCount = (s) => milestones(s).filter((m) => m.done).length;
 
@@ -59,10 +60,7 @@ function Home() {
   return (
     <div className="pad-tabs">
       <div className="row" style={{ justifyContent: 'space-between' }}>
-        <span className="col">
-          <span className="muted" style={{ fontSize: '0.875rem', fontWeight: 700 }}>{greeting()}{name}</span>
-          <h1 style={{ margin: 0, fontSize: '1.875rem', fontWeight: 800, letterSpacing: '-0.02em' }}>Still</h1>
-        </span>
+        <h1 className="h1" style={{ fontSize: '1.75rem' }}>{greeting()}{name}</h1>
         <button className="icon-btn press" aria-label="Reminder settings" onClick={() => nav.push('reminder', { mode: 'edit' })}><Icon name="bell" /></button>
       </div>
       <OfflineBanner />
@@ -80,8 +78,8 @@ function Home() {
         </button>
       ) : null}
 
-      <TapMo tip={tip} />
       <PlanCard />
+      <TapMo tip={tip} />
       <ComposeEntry />
       <JourneyTiles />
     </div>
@@ -134,8 +132,28 @@ function Browse() {
 }
 
 /* ---------- Search ---------- */
+/* Length and "downloaded only" live in a sheet, so Explore has one chip row above its content. */
+function FilterSheet({ len, dlOnly, onApply }) {
+  const { closeSheet } = useApp();
+  const [l, setL] = useState(len);
+  const [d, setD] = useState(dlOnly);
+  return (
+    <>
+      <div className="grabber" />
+      <SheetTitle title="Filters" />
+      <h3 className="label" style={{ marginTop: 20 }}>Length</h3>
+      <OptionList label="Length" options={LENGTHS.map(([x]) => x)} value={l} onChange={setL} />
+      <div className="group" style={{ marginTop: 16 }}>
+        <SwitchRow icon="download" title="Downloaded only" sub="Sessions that play without internet" on={d} onChange={setD} />
+      </div>
+      <button className="btn btn-primary press" style={{ marginTop: 20 }} onClick={() => { onApply(l, d); closeSheet(); }}>Show results</button>
+      {l !== 'Any' || d ? <button className="btn-text" style={{ display: 'block', margin: '6px auto 0' }} onClick={() => { onApply('Any', false); closeSheet(); }}>Clear filters</button> : null}
+    </>
+  );
+}
+
 function Search() {
-  const { s, nav } = useApp();
+  const { s, nav, sheet } = useApp();
   const [q, setQ] = useState('');
   const [cat, setCat] = useState('All');
   const [len, setLen] = useState('Any');
@@ -151,24 +169,35 @@ function Search() {
   ].filter((x) => (cat === 'All' || x.cat === cat) && lenTest(x) && (ql ? (x.title + ' ' + x.sub + ' ' + x.cat).toLowerCase().includes(ql) : cat !== 'All'))), [ql, cat, len, dlOnly, s.user.plus]);
   const res = useMemo(() => SESSIONS.filter((x) => (cat === 'All' || x.cat === cat) && lenTest(x) && (!dlOnly || s.downloads.includes(x.id)) && (x.title + ' ' + x.cat).toLowerCase().includes(q.trim().toLowerCase())), [q, cat, len, dlOnly, s.downloads]);
   const browsing = !ql && cat === 'All' && len === 'Any' && !dlOnly;
+  const nFilters = (len !== 'Any' ? 1 : 0) + (dlOnly ? 1 : 0);
   return (
     <div className="pad-tabs">
       <h1 className="h1">Explore</h1>
       <OfflineBanner />
-      <label className="pressed search-pill" style={{ marginTop: 18, display: 'flex', alignItems: 'center', gap: 10, minHeight: 54, padding: '0 18px', borderRadius: 27, color: 'var(--muted)' }}>
+      <div className="row" style={{ marginTop: 18, gap: 12 }}>
+      <label className="pressed search-pill grow" style={{ display: 'flex', alignItems: 'center', gap: 10, minHeight: 54, minWidth: 0, padding: '0 18px', borderRadius: 27, color: 'var(--muted)' }}>
         <Icon name="search" size={18} />
         <span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>Search sessions</span>
         <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Sessions, stories, programs"
           style={{ flex: 1, border: 0, background: 'transparent', fontSize: '1rem', color: 'var(--ink)', minWidth: 0 }} />
         {q ? <button className="btn-text" style={{ minHeight: 44, minWidth: 44, padding: 0, marginRight: -12 }} onClick={() => setQ('')} aria-label="Clear search"><Icon name="close" size={16} sw={2.4} /></button> : null}
       </label>
+        <button type="button" className={'icon-btn press' + (nFilters ? ' on' : '')} style={{ width: 54, height: 54, position: 'relative' }}
+          aria-label={nFilters ? `Filters, ${nFilters} on` : 'Filters'}
+          onClick={() => sheet(<FilterSheet len={len} dlOnly={dlOnly} onApply={(l, d) => { setLen(l); setDlOnly(d); }} />)}>
+          <Icon name="sliders" size={20} />
+          {nFilters ? <span aria-hidden="true" className="tnum" style={{ position: 'absolute', top: 2, right: 2, minWidth: 20, height: 20, borderRadius: 10, padding: '0 5px', background: 'var(--primary)', color: 'var(--onp)', fontSize: '0.6875rem', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{nFilters}</span> : null}
+        </button>
+      </div>
       <div className="hscroll" style={{ paddingTop: 18 }}>
         {CATS.map((c) => <button key={c} type="button" aria-pressed={cat === c} className={'chip press' + (cat === c ? ' on' : '')} onClick={() => setCat(c)}>{c}</button>)}
       </div>
-      <div className="hscroll" style={{ paddingTop: 2 }} role="group" aria-label="Filter by length">
-        {LENGTHS.map(([l]) => <button key={l} type="button" aria-pressed={len === l} className={'chip press' + (len === l ? ' on' : '')} style={{ fontSize: '0.875rem' }} onClick={() => setLen(l)}>{l}</button>)}
-        <button type="button" aria-pressed={dlOnly} className={'chip press' + (dlOnly ? ' on' : '')} style={{ fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: 6 }} onClick={() => setDlOnly(!dlOnly)}><Icon name="download" size={15} sw={2.2} />Downloaded</button>
-      </div>
+      {nFilters ? (
+        <p className="muted" role="status" style={{ margin: '0 0 0 8px', fontSize: '0.8125rem', fontWeight: 700 }}>
+          {[len !== 'Any' ? len : null, dlOnly ? 'Downloaded only' : null].filter(Boolean).join(' · ')}
+          <button className="btn-text" style={{ minHeight: 44, padding: '0 10px', fontSize: '0.8125rem' }} onClick={() => { setLen('Any'); setDlOnly(false); }}>Clear</button>
+        </p>
+      ) : null}
       {browsing && !loading ? <Browse /> : null}
       {browsing && !loading ? <h2 className="label">All sessions</h2> : null}
       {loading ? (
@@ -203,9 +232,9 @@ function Search() {
       ) : (
         <div className="col" style={{ alignItems: 'center', textAlign: 'center', marginTop: 30 }}>
           <Mo size={130} mood="oops" />
-          <h2 className="h2" style={{ marginTop: 14 }}>Mo couldn’t find that</h2>
-          <p className="lead">Try a shorter word, or browse a category instead.</p>
-          <button className="btn btn-soft press" style={{ width: 'auto', padding: '0 24px', marginTop: 16 }} onClick={() => { setQ(''); setCat('All'); setLen('Any'); setDlOnly(false); }}>Clear filters</button>
+          <h2 className="h2" style={{ marginTop: 14 }}>{ql ? 'Mo couldn’t find that' : 'Nothing matches these filters'}</h2>
+          <p className="lead">{ql ? 'Try a shorter word, or browse a category instead.' : dlOnly ? 'Try a different length, or download more sessions to use offline.' : 'Try a different length or category.'}</p>
+          <button className="btn btn-soft press" style={{ width: 'auto', padding: '0 24px', marginTop: 16 }} onClick={() => { setQ(''); setCat('All'); setLen('Any'); setDlOnly(false); }}>{ql ? 'Clear search' : 'Clear filters'}</button>
         </div>
       )}
     </div>
@@ -228,6 +257,7 @@ export function TimerScreen() {
   const { s, set, nav, sheet, platform } = useApp();
   const [mins, setMins] = useState(s.defaultLen || 15);
   const [sound, setSound] = useState('Rain');
+  useEffect(() => { warmAmbience(['rain', 'forest', 'ocean']); }, []);
   const circ = 2 * Math.PI * 92;
   return (
     <div className="pad">
@@ -257,7 +287,7 @@ export function TimerScreen() {
         {Object.keys(SOUNDS).map((k) => {
           const on = sound === k;
           return (
-            <button key={k} type="button" role="radio" aria-checked={on} onClick={() => setSound(k)} className="press"
+            <button key={k} type="button" role="radio" aria-checked={on} onClick={() => { setSound(k); if (k === 'Silence') stopAmbience(0.5); else previewAmbience(mixFor(k)); }} className="press"
               style={{ height: 78, borderRadius: 22, border: 0, background: 'var(--base)', boxShadow: on ? 'var(--down)' : 'var(--up-sm)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, fontSize: '0.8125rem', fontWeight: 800, color: on ? 'var(--accent)' : 'var(--ink)', cursor: 'pointer' }}>
               <span style={{ width: 26, height: 26, borderRadius: '50%', background: SOUNDS[k], border: k === 'Silence' ? '2px dashed var(--muted)' : 0 }} />{k}
             </button>
@@ -287,7 +317,7 @@ function Profile() {
   return (
     <div className="pad-tabs">
       <div className="row" style={{ justifyContent: 'space-between' }}>
-        <h1 className="h1">Your journey</h1>
+        <h1 className="h1">Profile</h1>
         <button className="icon-btn press" aria-label="Settings" onClick={() => nav.push('settings')}><Icon name="gear" size={20} sw={1.8} /></button>
       </div>
       <div className="raised" style={{ marginTop: 18, borderRadius: 28, padding: 12 }}>

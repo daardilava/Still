@@ -4,6 +4,7 @@
 // a webview on Android/iOS, plain React on web. This is step 3 of the web-to-native
 // migration; screens get rebuilt natively one by one (see ../MIGRATION.md).
 import { useEffect } from 'react';
+import './figtree-font.css';
 import '../../src/theme.css';
 import { App } from '../../src/app.jsx';
 import { ErrorBoundary } from '../../src/safety.jsx';
