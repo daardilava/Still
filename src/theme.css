@@ -33,6 +33,62 @@ img{display:block}
   color-scheme:dark;
 }
 
+/* ---------- Size tokens: type, spacing, radius ----------
+   The one source for sizes (colours and shadows are the theme tokens above). The scales come from the
+   values the screens already used most, snapped to a 4px grid. Screens use these through the text
+   classes below or as var(--…) in a style; a raw number in a screen is drift. */
+:root{
+  /* Type ramp in rem, so the in-app Text size setting scales every step. */
+  --fs-caption2:.6875rem;  /* 11 · tags, badges */
+  --fs-caption:.75rem;     /* 12 · small labels, eyebrows */
+  --fs-footnote:.8125rem;  /* 13 · secondary lines, meta */
+  --fs-subhead:.875rem;    /* 14 · supporting text */
+  --fs-callout:.9375rem;   /* 15 · lead paragraphs, row titles */
+  --fs-body:1rem;          /* 16 · body, card headings */
+  --fs-headline:1.0625rem; /* 17 · primary buttons */
+  --fs-title3:1.125rem;    /* 18 · section titles */
+  --fs-title2:1.375rem;    /* 22 · sheet titles */
+  --fs-title1:1.625rem;    /* 26 · big numbers in tiles */
+  --fs-large:1.875rem;     /* 30 · screen titles */
+  --fs-display:2.75rem;    /* 44 · hero numbers */
+  /* Spacing, 4px grid. Name = multiple of 4. */
+  --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:20px;--sp-6:24px;--sp-8:32px;--sp-12:48px;
+  /* Radius */
+  --r-xs:4px;   /* bar segments, swatches */
+  --r-sm:8px;   /* tracks */
+  --r-md:12px;  /* icon wells */
+  --r-lg:16px;  /* small tiles */
+  --r-xl:20px;  /* tiles, choice buttons */
+  --r-2xl:24px; /* cards */
+  --r-3xl:28px; /* feature cards, sheets' inner panels */
+  --r-full:999px;
+  /* Brand surface: fixed in both themes (e.g. the shareable recap card), with its own text colours. */
+  --brand:#5B32C4;--brand-deep:#2A1E52;--on-brand:#FFFFFF;--on-brand-muted:#E6DDFC;--on-brand-faint:#D9CDFA;
+}
+
+/* Text styles: size + weight + line height together. Colour stays separate (.muted, .accent, or a token). */
+.t-caption2{font-size:var(--fs-caption2);font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.t-eyebrow{font-size:var(--fs-caption);font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.t-caption{font-size:var(--fs-caption);font-weight:700;line-height:1.35}
+.t-footnote{font-size:var(--fs-footnote);line-height:1.4}
+.t-subhead{font-size:var(--fs-subhead);line-height:1.45}
+.t-callout{font-size:var(--fs-callout);line-height:1.5}
+.t-body{font-size:var(--fs-body);line-height:1.5}
+.t-headline{font-size:var(--fs-headline);font-weight:800;line-height:1.3}
+.t-title3{font-size:var(--fs-title3);font-weight:800;line-height:1.25;letter-spacing:-.01em}
+.t-title2{font-size:var(--fs-title2);font-weight:800;line-height:1.2;letter-spacing:-.01em}
+.t-title1{font-size:var(--fs-title1);font-weight:800;line-height:1.15;letter-spacing:-.02em}
+.t-display{font-size:var(--fs-display);font-weight:800;line-height:1;letter-spacing:-.03em}
+.w-semibold{font-weight:600}.w-bold{font-weight:700}.w-heavy{font-weight:800}
+
+/* Card: padding + radius for a surface. Combine with .raised (or .pressed) for its depth. */
+.card{border-radius:var(--r-2xl);padding:var(--sp-4) var(--sp-5)}
+/* Tile: a square-ish choice button (moods, sounds, Mo's outfits). .on = chosen. */
+.tile{border:0;background:var(--base);box-shadow:var(--up-sm);border-radius:var(--r-xl);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--sp-2);color:var(--ink);cursor:pointer}
+.tile.on{box-shadow:var(--down);color:var(--accent)}
+.tile:not(.on):active{box-shadow:var(--down-sm)}
+.brand-card{background:linear-gradient(150deg,var(--brand),var(--brand-deep));color:var(--on-brand);box-shadow:var(--up);border-radius:var(--r-3xl);padding:var(--sp-5)}
+
 /* ---------- Stage + phone ---------- */
 .stage{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;gap:48px;padding:28px}
 .phone{position:relative;width:390px;height:844px;flex-shrink:0;border-radius:54px;overflow:hidden;background:var(--base);color:var(--ink);
@@ -86,12 +142,14 @@ img{display:block}
 .chip .count{margin-left:6px;color:var(--muted);font-weight:600}
 .tag{font-size:0.6875rem;font-weight:800;letter-spacing:.06em;padding:6px 11px;border-radius:12px;box-shadow:var(--down-sm);color:var(--accent);text-transform:uppercase;display:inline-flex;align-items:center;gap:4px}
 .tag.plus{background:var(--primary);color:var(--onp);box-shadow:none}
-.h1{font-size:1.875rem;line-height:1.12;font-weight:800;letter-spacing:-.02em;margin:0}
-.h2{font-size:1.125rem;font-weight:800;letter-spacing:-.01em;margin:0}
-.lead{font-size:0.9375rem;line-height:1.5;color:var(--muted);margin:8px 0 0}
+.h1{font-size:var(--fs-large);line-height:1.12;font-weight:800;letter-spacing:-.02em;margin:0}
+.h2{font-size:var(--fs-title3);font-weight:800;letter-spacing:-.01em;margin:0}
+.lead{font-size:var(--fs-callout);line-height:1.5;color:var(--muted);margin:var(--sp-2) 0 0}
+/* Card heading: one step below .h2 */
+.h3{font-size:var(--fs-body);font-weight:800;letter-spacing:-.01em;margin:0}
 .muted{color:var(--muted)}
 .accent{color:var(--accent)}
-.label{font-size:0.75rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:26px 0 12px 8px}
+.label{font-size:var(--fs-caption);font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:26px 0 12px 8px}
 .hscroll{display:flex;gap:12px;overflow-x:auto;margin:0 -24px;padding:14px 24px 16px;scrollbar-width:none}
 .hscroll::-webkit-scrollbar{display:none}
 .segment{display:grid;gap:6px;padding:6px;border-radius:30px;box-shadow:var(--down)}
