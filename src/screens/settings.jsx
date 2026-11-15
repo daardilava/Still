@@ -7,6 +7,7 @@ import { Spinner } from './onboarding.jsx';
 import { PaceSheet, WidgetSheet, askHealth } from './extras.jsx';
 import { MoAvatar, BgPicker } from './profile.jsx';
 import { QuietSettings } from './quiet.jsx';
+import { PrivacySettings } from './privacy.jsx';
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -22,6 +23,20 @@ function PickSheet({ title, sub, options, value, onPick }) {
 }
 
 /* ---------- Settings ---------- */
+const TEXT_SIZES = { default: 'Default', large: 'Large', larger: 'Larger', largest: 'Largest' };
+function TextSizeSheet() {
+  const { s, set, closeSheet } = useApp();
+  return (
+    <>
+      <div className="grabber" />
+      <SheetTitle title="Text size" sub="Your phone’s own text size is followed too. In the real app this is Dynamic Type on iPhone and Font size on Android." />
+      <OptionList label="Text size" options={Object.entries(TEXT_SIZES).map(([value, label]) => ({ value, label }))} value={s.textSize || 'default'} onChange={(v) => { set({ textSize: v }); }} />
+      <p style={{ margin: '16px 4px 0', fontSize: '1rem', lineHeight: 1.5 }}>Preview: “Breathe in slowly… and let it go.”</p>
+      <button className="btn btn-primary press" style={{ marginTop: 16 }} onClick={closeSheet}>Done</button>
+    </>
+  );
+}
+
 export function Settings() {
   const { s, set, nav, sheet, dialog, toast, platform, dark, deviceDark, resetAll } = useApp();
   const ios = platform === 'ios';
@@ -35,10 +50,13 @@ export function Settings() {
           onChange={(v) => set({ matchDevice: false, dark: v })} />
         <SwitchRow icon="phone" title="Match device setting" on={s.matchDevice}
           onChange={(v) => set({ matchDevice: v, dark: v ? s.dark : dark })} />
+        <LinkRow icon="doc" title="Text size" value={TEXT_SIZES[s.textSize] || 'Default'} onClick={() => sheet(<TextSizeSheet />)} />
       </Group>
-      <p className="muted" style={{ fontSize: 13, lineHeight: 1.45, margin: '12px 12px 0' }}>
+      <p className="muted" style={{ fontSize: '0.8125rem', lineHeight: 1.45, margin: '12px 12px 0' }}>
         {s.matchDevice ? `Following your phone’s ${ios ? 'appearance' : 'dark theme'} setting (currently ${deviceDark ? 'dark' : 'light'}). Turn on Dark mode to choose it yourself.` : `Still will stay ${dark ? 'dark' : 'light'} whatever your phone is set to.`}
       </p>
+
+      <PrivacySettings />
 
       <h2 className="label">Account</h2>
       <Group>
@@ -89,7 +107,7 @@ export function Settings() {
       <h2 className="label">Prototype controls</h2>
       <Group>
         <div style={{ padding: '10px 12px' }}>
-          <p style={{ margin: '0 0 8px', fontWeight: 700, fontSize: 14 }}>Show as</p>
+          <p style={{ margin: '0 0 8px', fontWeight: 700, fontSize: '0.875rem' }}>Show as</p>
           <Segment label="Platform" options={[{ value: 'ios', label: 'iOS' }, { value: 'android', label: 'Android' }]} value={platform} onChange={(v) => set({ platform: v })} />
         </div>
         <SwitchRow icon="offline" title="Simulate offline" on={s.offline} onChange={(v) => set({ offline: v })} />
@@ -105,12 +123,12 @@ export function Settings() {
             onClick={() => dialog({ title: 'Sign out?', message: 'Your downloads stay on this phone. Mo will be here when you’re back.', actions: [{ label: 'Cancel' }, { label: 'Sign out', destructive: true, onPress: () => { set({ user: { name: '', email: '', signedIn: false, plus: false }, onboarded: false, tab: 'home' }); nav.reset('welcome'); toast('Signed out.'); } }] })}>
             <Icon name="logout" />Sign out
           </button>
-          <button className="btn-text btn-danger" style={{ marginTop: 6, fontSize: 14 }} onClick={() => nav.push('deleteAccount')}>Delete account</button>
+          <button className="btn-text btn-danger" style={{ marginTop: 6, fontSize: '0.875rem' }} onClick={() => nav.push('deleteAccount')}>Delete account</button>
         </>
       ) : (
         <button className="btn btn-primary press" style={{ marginTop: 28 }} onClick={() => nav.push('account')}>Create a free account</button>
       )}
-      <p className="muted" style={{ textAlign: 'center', fontSize: 12, fontWeight: 600, margin: '14px 0 0' }}>Still · Version [1.0.0] · Prototype</p>
+      <p className="muted" style={{ textAlign: 'center', fontSize: '0.75rem', fontWeight: 600, margin: '14px 0 0' }}>Still · Version [1.0.0] · Prototype</p>
     </div>
   );
 }
@@ -128,11 +146,11 @@ export function EditProfile() {
     <div className="pad">
       <TopBar title="Profile" />
       <div style={{ alignSelf: 'center', marginTop: 20 }}><MoAvatar size={116} bg={bg} /></div>
-      <p className="muted" style={{ textAlign: 'center', margin: '12px 0 6px', fontSize: 13, fontWeight: 700 }}>Your Mo. Change what Mo wears in Mo’s collection.</p>
+      <p className="muted" style={{ textAlign: 'center', margin: '12px 0 6px', fontSize: '0.8125rem', fontWeight: 700 }}>Your Mo. Change what Mo wears in Mo’s collection.</p>
       <BgPicker value={bg} onChange={setBg} />
       <Field label="Name" value={name} onChange={setName} placeholder="[YOUR NAME]" autoComplete="name" />
       {s.user.signedIn ? <Field label="Email" type="email" value={email} onChange={setEmail} autoComplete="email" error={valid ? '' : 'Enter a valid email address.'} /> : (
-        <p className="muted" style={{ fontSize: 14, lineHeight: 1.45, marginTop: 18 }}>You’re using Still as a guest. <button className="btn-text" style={{ minHeight: 0, padding: 0 }} onClick={() => nav.push('account')}>Create an account</button> to keep your progress.</p>
+        <p className="muted" style={{ fontSize: '0.875rem', lineHeight: 1.45, marginTop: 18 }}>You’re using Still as a guest. <button className="btn-text" style={{ minHeight: 0, padding: 0 }} onClick={() => nav.push('account')}>Create an account</button> to keep your progress.</p>
       )}
       <div className="grow" style={{ minHeight: 20 }} />
       <button className="btn btn-primary press" disabled={!valid || busy} onClick={async () => { setBusy(true); await wait(700); set({ avatarBg: bg, user: { ...s.user, name: name.trim(), email } }); toast('Profile saved.'); nav.back(); }}>{busy ? <Spinner /> : 'Save'}</button>
@@ -149,13 +167,13 @@ export function Downloads() {
       <TopBar title="Downloads" />
       {list.length ? (
         <>
-          <p className="muted" style={{ fontSize: 14, margin: '18px 8px 0' }}><span className="tnum">{list.length}</span> sessions · about <span className="tnum">{list.length * 28}</span> MB on this phone</p>
+          <p className="muted" style={{ fontSize: '0.875rem', margin: '18px 8px 0' }}><span className="tnum">{list.length}</span> sessions · about <span className="tnum">{list.length * 28}</span> MB on this phone</p>
           <div className="col" style={{ gap: 14, marginTop: 14 }}>
             {list.map((x) => (
               <div key={x.id} className="raised row" style={{ borderRadius: 22, padding: 10, gap: 12 }}>
                 <img src={x.img} alt="" style={{ width: 52, height: 52, borderRadius: 14, objectFit: 'cover', objectPosition: x.pos }} />
                 <button className="col grow" onClick={() => nav.push('session', { id: x.id })} style={{ border: 0, background: 'none', textAlign: 'left', cursor: 'pointer', color: 'var(--ink)', padding: 0, minHeight: 52, justifyContent: 'center' }}>
-                  <span style={{ fontWeight: 800, fontSize: 15 }}>{x.title}</span><span className="muted" style={{ fontSize: 12, fontWeight: 600 }}>{x.cat} · 28 MB</span>
+                  <span style={{ fontWeight: 800, fontSize: '0.9375rem' }}>{x.title}</span><span className="muted" style={{ fontSize: '0.75rem', fontWeight: 600 }}>{x.cat} · 28 MB</span>
                 </button>
                 <button className="icon-btn press" aria-label={'Remove ' + x.title} onClick={() => { set({ downloads: s.downloads.filter((d) => d !== x.id) }); toast('Removed from this phone.'); }} style={{ color: 'var(--danger)' }}><Icon name="trash" /></button>
               </div>
@@ -187,7 +205,7 @@ export function Feedback() {
         <TopBar />
         <div className="grow" />
         <MoDisc size={220} mood="happy" enter />
-        <h1 className="h1" style={{ marginTop: 24, fontSize: 26 }}>Thank you</h1>
+        <h1 className="h1" style={{ marginTop: 24, fontSize: '1.625rem' }}>Thank you</h1>
         <p className="lead">Mo passed your note to the team. We read every message.</p>
         <div className="grow" />
         <button className="btn btn-primary press" onClick={nav.back}>Done</button>
@@ -199,7 +217,7 @@ export function Feedback() {
       <TopBar title="Help & feedback" />
       <button className="pressed row press" onClick={() => nav.push('support')} style={{ marginTop: 18, width: '100%', border: 0, borderRadius: 22, padding: 14, gap: 12, textAlign: 'left', cursor: 'pointer', color: 'var(--ink)' }}>
         <Icon name="heart" style={{ color: 'var(--accent)', flexShrink: 0 }} />
-        <span className="col grow"><span style={{ fontWeight: 800, fontSize: 15 }}>Need more support?</span><span className="muted" style={{ fontSize: 13 }}>If things feel heavy, Mo can point you to people who can help.</span></span>
+        <span className="col grow"><span style={{ fontWeight: 800, fontSize: '0.9375rem' }}>Need more support?</span><span className="muted" style={{ fontSize: '0.8125rem' }}>If things feel heavy, Mo can point you to people who can help.</span></span>
         <Icon name="chevron" size={16} sw={2.4} style={{ color: 'var(--muted)' }} />
       </button>
       <h2 className="label">Common questions</h2>
@@ -218,7 +236,7 @@ export function Feedback() {
 
 /* ---------- Legal & FAQ (placeholder copy) ---------- */
 const DOCS = {
-  privacy: ['Privacy policy', ['[PLACEHOLDER — replace with your real privacy policy before launch.]', 'What we collect: [LIST THE DATA YOU COLLECT, e.g. account email, session history, crash reports].', 'How we use it: [EXPLAIN PURPOSES].', 'Your choices: you can export or delete your data at any time from Settings › Delete account.', 'Contact: [PRIVACY CONTACT EMAIL].']],
+  privacy: ['Privacy policy', ['[PLACEHOLDER — replace with your real privacy policy before launch.]', 'What we collect: [LIST THE DATA YOU COLLECT, e.g. account email, session history, crash reports].', 'How we use it: [EXPLAIN PURPOSES].', 'Your choices: mood saving and AI personalisation are off unless you turn them on; change them in Settings › Privacy. Download everything Still keeps about you in Settings › Privacy › Download my data, and delete your account in Settings › Account › Delete account.', 'Contact: [PRIVACY CONTACT EMAIL].']],
   terms: ['Terms of use', ['[PLACEHOLDER — replace with your real terms of use before launch.]', 'Still is a wellbeing app and is not a medical service. [ADD YOUR DISCLAIMER].', 'Subscriptions: [DESCRIBE BILLING, TRIALS AND CANCELLATION].', 'Company: [COMPANY NAME, ADDRESS].']],
   'faq-downloads': ['How do downloads work?', ['Open a session and tap “Download for offline”. Downloaded sessions play without a connection and show an offline badge.', 'Manage or remove them in Settings › Downloads.']],
   'faq-cancel': ['How do I cancel Plus?', ['Subscriptions are managed by the App Store or Google Play, not inside Still.', 'iOS: Settings › your name › Subscriptions. Android: Google Play › Profile › Payments & subscriptions.', 'You keep Plus until the end of the period you paid for.']]
@@ -229,7 +247,7 @@ export function Legal({ doc = 'privacy' }) {
     <div className="pad">
       <TopBar title={title} />
       <div className="raised" style={{ marginTop: 20, padding: '8px 20px', borderRadius: 26 }}>
-        {paras.map((p, i) => <p key={i} style={{ fontSize: 15, lineHeight: 1.6, color: 'var(--body)' }}>{p}</p>)}
+        {paras.map((p, i) => <p key={i} style={{ fontSize: '0.9375rem', lineHeight: 1.6, color: 'var(--body)' }}>{p}</p>)}
       </div>
     </div>
   );
@@ -244,7 +262,7 @@ export function DeleteAccount() {
     <div className="pad">
       <TopBar title="Delete account" />
       <div style={{ alignSelf: 'center', marginTop: 18 }}><Mo size={120} mood="oops" /></div>
-      <h1 className="h1" style={{ fontSize: 24, textAlign: 'center', marginTop: 8 }}>Mo will miss you</h1>
+      <h1 className="h1" style={{ fontSize: '1.5rem', textAlign: 'center', marginTop: 8 }}>Mo will miss you</h1>
       <p className="lead">Deleting your account permanently removes your profile, streak, history, saved sessions and downloads. This can’t be undone.</p>
       <p className="lead">If you have Still Plus, cancel it in your app store account first — deleting your account doesn’t stop billing.</p>
       <Field label='Type DELETE to confirm' value={text} onChange={setText} autoComplete="off" />
@@ -265,15 +283,15 @@ export function Support() {
       <div style={{ alignSelf: 'center', marginTop: 16 }}><MoDisc size={170} mood="calm" /></div>
       <p className="lead" style={{ textAlign: 'center' }}>Still can help you slow down, but it isn’t a substitute for professional care.</p>
       <div className="raised" style={{ marginTop: 20, padding: '16px 18px', borderRadius: 24 }}>
-        <h2 className="h2" style={{ fontSize: 17 }}>If you’re in crisis</h2>
-        <p style={{ margin: '8px 0 0', fontSize: 15, lineHeight: 1.5, color: 'var(--body)' }}>If you’re in danger or might act on thoughts of harming yourself, call your local emergency number now.</p>
-        <p style={{ margin: '8px 0 14px', fontSize: 15, lineHeight: 1.5, color: 'var(--body)' }}>To talk to someone, you can find a free, confidential helpline for your country.</p>
+        <h2 className="h2" style={{ fontSize: '1.0625rem' }}>If you’re in crisis</h2>
+        <p style={{ margin: '8px 0 0', fontSize: '0.9375rem', lineHeight: 1.5, color: 'var(--body)' }}>If you’re in danger or might act on thoughts of harming yourself, call your local emergency number now.</p>
+        <p style={{ margin: '8px 0 14px', fontSize: '0.9375rem', lineHeight: 1.5, color: 'var(--body)' }}>To talk to someone, you can find a free, confidential helpline for your country.</p>
         <a className="btn btn-primary press" style={{ height: 52 }} href="https://findahelpline.com" target="_blank" rel="noopener noreferrer">Find a helpline</a>
-        <p className="muted" style={{ margin: '10px 0 0', fontSize: 12, lineHeight: 1.45 }}>findahelpline.com lists crisis lines worldwide. [ADD LOCAL NUMBERS FOR YOUR LAUNCH COUNTRIES]</p>
+        <p className="muted" style={{ margin: '10px 0 0', fontSize: '0.75rem', lineHeight: 1.45 }}>findahelpline.com lists crisis lines worldwide. [ADD LOCAL NUMBERS FOR YOUR LAUNCH COUNTRIES]</p>
       </div>
       <div className="raised" style={{ marginTop: 18, padding: '16px 18px', borderRadius: 24 }}>
-        <h2 className="h2" style={{ fontSize: 17 }}>Talking to someone</h2>
-        <p style={{ margin: '8px 0 0', fontSize: 15, lineHeight: 1.5, color: 'var(--body)' }}>If stress, worry or poor sleep keeps getting in the way, a doctor, a therapist or someone you trust can help.</p>
+        <h2 className="h2" style={{ fontSize: '1.0625rem' }}>Talking to someone</h2>
+        <p style={{ margin: '8px 0 0', fontSize: '0.9375rem', lineHeight: 1.5, color: 'var(--body)' }}>If stress, worry or poor sleep keeps getting in the way, a doctor, a therapist or someone you trust can help.</p>
       </div>
     </div>
   );

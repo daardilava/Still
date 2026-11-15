@@ -21,9 +21,9 @@ export function QuietLabel({ text }) {
   const on = s.quietOn && s.quietReady;
   return (
     <span className="col" style={{ alignItems: 'center', gap: 3 }}>
-      <span className="muted" style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase' }}>{text}</span>
+      <span className="muted" style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase' }}>{text}</span>
       {on ? (
-        <span className="row accent" style={{ gap: 4, fontSize: 11, fontWeight: 800 }}>
+        <span className="row accent" style={{ gap: 4, fontSize: '0.6875rem', fontWeight: 800 }}>
           <Icon name="moon" size={11} sw={2.6} />{quietName(platform)} on
         </span>
       ) : null}
@@ -65,22 +65,22 @@ export function QuietSetupSheet() {
         <ol className="raised" style={{ listStyle: 'none', margin: '16px 0 0', padding: '6px 16px', borderRadius: 24 }}>
           {steps.map(([t, d], i) => (
             <li key={t} className="row" style={{ gap: 12, padding: '10px 0', alignItems: 'flex-start' }}>
-              <span style={{ width: 28, height: 28, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, background: i < step ? 'var(--primary)' : 'transparent', color: i < step ? 'var(--onp)' : 'var(--accent)', boxShadow: i < step ? 'none' : 'var(--down-sm)' }}>{i < step ? <Icon name="check" size={14} sw={3} /> : i + 1}</span>
+              <span style={{ width: 28, height: 28, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8125rem', fontWeight: 800, background: i < step ? 'var(--primary)' : 'transparent', color: i < step ? 'var(--onp)' : 'var(--accent)', boxShadow: i < step ? 'none' : 'var(--down-sm)' }}>{i < step ? <Icon name="check" size={14} sw={3} /> : i + 1}</span>
               <span className="col" style={{ gap: 2, textAlign: 'left' }}>
-                <span style={{ fontWeight: 800, fontSize: 15 }}>{t}</span>
-                <span className="muted" style={{ fontSize: 13, lineHeight: 1.4 }}>{d}</span>
+                <span style={{ fontWeight: 800, fontSize: '0.9375rem' }}>{t}</span>
+                <span className="muted" style={{ fontSize: '0.8125rem', lineHeight: 1.4 }}>{d}</span>
               </span>
             </li>
           ))}
         </ol>
       ) : (
         <div className="pressed col" style={{ marginTop: 16, padding: '12px 16px', borderRadius: 22, gap: 8 }}>
-          <span className="row" style={{ gap: 10, fontSize: 14, fontWeight: 700, color: 'var(--body)' }}><Icon name="check" size={16} sw={2.6} style={{ color: 'var(--accent)' }} />Only during sessions, stories and breathing</span>
-          <span className="row" style={{ gap: 10, fontSize: 14, fontWeight: 700, color: 'var(--body)' }}><Icon name="check" size={16} sw={2.6} style={{ color: 'var(--accent)' }} />Your own settings come back when you finish</span>
-          <span className="row" style={{ gap: 10, fontSize: 14, fontWeight: 700, color: 'var(--body)' }}><Icon name="check" size={16} sw={2.6} style={{ color: 'var(--accent)' }} />Alarms always ring</span>
+          <span className="row" style={{ gap: 10, fontSize: '0.875rem', fontWeight: 700, color: 'var(--body)' }}><Icon name="check" size={16} sw={2.6} style={{ color: 'var(--accent)' }} />Only during sessions, stories and breathing</span>
+          <span className="row" style={{ gap: 10, fontSize: '0.875rem', fontWeight: 700, color: 'var(--body)' }}><Icon name="check" size={16} sw={2.6} style={{ color: 'var(--accent)' }} />Your own settings come back when you finish</span>
+          <span className="row" style={{ gap: 10, fontSize: '0.875rem', fontWeight: 700, color: 'var(--body)' }}><Icon name="check" size={16} sw={2.6} style={{ color: 'var(--accent)' }} />Alarms always ring</span>
         </div>
       )}
-      <p className="muted" style={{ margin: '12px 4px 0', fontSize: 13, lineHeight: 1.4, textAlign: 'center' }}>Even without this, Still never sends you its own reminders while you’re practising.</p>
+      <p className="muted" style={{ margin: '12px 4px 0', fontSize: '0.8125rem', lineHeight: 1.4, textAlign: 'center' }}>Even without this, Still never sends you its own reminders while you’re practising.</p>
       {ios ? (
         step < steps.length ? (
           <button className="btn btn-primary press" style={{ marginTop: 14 }} onClick={() => { setStep(steps.length); toast('Opening Shortcuts… (in the real app)'); }}>Open Shortcuts</button>
@@ -118,7 +118,7 @@ export function QuietNudge() {
   if (s.quietOn || s.quietAsked) return null;
   return (
     <button type="button" className="press row" onClick={() => sheet(<QuietSetupSheet />)}
-      style={{ marginTop: 10, alignSelf: 'center', minHeight: 44, border: 0, background: 'none', gap: 8, color: 'var(--accent)', fontSize: 14, fontWeight: 800, cursor: 'pointer', padding: '0 8px' }}>
+      style={{ marginTop: 10, alignSelf: 'center', minHeight: 44, border: 0, background: 'none', gap: 8, color: 'var(--accent)', fontSize: '0.875rem', fontWeight: 800, cursor: 'pointer', padding: '0 8px' }}>
       <Icon name="moon" size={16} sw={2.4} />Silence notifications while you practise
     </button>
   );
@@ -131,11 +131,11 @@ export function Banner({ note, platform, onClose }) {
       <span className="notif-ico"><Icon name={note.icon} size={16} sw={2.2} /></span>
       <span className="col grow" style={{ minWidth: 0, gap: 1, textAlign: 'left' }}>
         <span className="row" style={{ justifyContent: 'space-between', gap: 8 }}>
-          <span style={{ fontSize: 12, fontWeight: 700, opacity: 0.7, textTransform: platform === 'android' ? 'none' : 'uppercase', letterSpacing: platform === 'ios' ? '.04em' : 0 }}>{note.app}</span>
-          <span style={{ fontSize: 12, opacity: 0.6 }}>now</span>
+          <span style={{ fontSize: '0.75rem', fontWeight: 700, opacity: 0.7, textTransform: platform === 'android' ? 'none' : 'uppercase', letterSpacing: platform === 'ios' ? '.04em' : 0 }}>{note.app}</span>
+          <span style={{ fontSize: '0.75rem', opacity: 0.6 }}>now</span>
         </span>
-        <span style={{ fontSize: 14, fontWeight: 800 }}>{note.title}</span>
-        <span style={{ fontSize: 14, lineHeight: 1.35, opacity: 0.85, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{note.body}</span>
+        <span style={{ fontSize: '0.875rem', fontWeight: 800 }}>{note.title}</span>
+        <span style={{ fontSize: '0.875rem', lineHeight: 1.35, opacity: 0.85, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{note.body}</span>
       </span>
     </button>
   );

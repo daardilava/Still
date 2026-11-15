@@ -50,12 +50,12 @@ export function Practice({ id }) {
         <span className="tag">Practice</span><span className="tag tnum">{p.min} min</span>
         {locked ? <span className="tag plus"><Icon name="crown" size={11} sw={2.4} />Plus</span> : <span className="tag">Free</span>}
       </div>
-      <h1 className="h1" style={{ marginTop: 12, fontSize: 28 }}>{p.name}</h1>
+      <h1 className="h1" style={{ marginTop: 12, fontSize: '1.75rem' }}>{p.name}</h1>
       <p className="lead">{p.what}</p>
       <div className="pressed col" style={{ marginTop: 16, padding: '12px 16px', borderRadius: 20, gap: 6 }}>
-        <span className="row" style={{ gap: 10, fontSize: 14, fontWeight: 700, color: 'var(--body)' }}><Icon name="sparkle" size={16} style={{ color: 'var(--accent)', flexShrink: 0 }} />Helps when you feel {p.fit}</span>
-        <span className="row" style={{ gap: 10, fontSize: 14, fontWeight: 700, color: 'var(--body)' }}><Icon name="book" size={16} style={{ color: 'var(--accent)', flexShrink: 0 }} />{p.origin}</span>
-        {p.id === 'body' ? <span className="row" style={{ gap: 10, fontSize: 14, fontWeight: 700, color: 'var(--body)' }}><Icon name="heart" size={16} style={{ color: 'var(--accent)', flexShrink: 0 }} />Eyes open is fine. Skip any part that doesn’t feel okay.</span> : null}
+        <span className="row" style={{ gap: 10, fontSize: '0.875rem', fontWeight: 700, color: 'var(--body)' }}><Icon name="sparkle" size={16} style={{ color: 'var(--accent)', flexShrink: 0 }} />Helps when you feel {p.fit}</span>
+        <span className="row" style={{ gap: 10, fontSize: '0.875rem', fontWeight: 700, color: 'var(--body)' }}><Icon name="book" size={16} style={{ color: 'var(--accent)', flexShrink: 0 }} />{p.origin}</span>
+        {p.id === 'body' ? <span className="row" style={{ gap: 10, fontSize: '0.875rem', fontWeight: 700, color: 'var(--body)' }}><Icon name="heart" size={16} style={{ color: 'var(--accent)', flexShrink: 0 }} />Eyes open is fine. Skip any part that doesn’t feel okay.</span> : null}
       </div>
       {p.id === 'metta' ? <KindnessSky count={s.kindness || 0} small /> : null}
       <div className="grow" style={{ minHeight: 18 }} />
@@ -100,7 +100,7 @@ function StopPractice({ sec, paused, onDone }) {
     <>
       <div className="row" style={{ gap: 12, marginTop: 26 }} aria-hidden="true">
         {STOP_STEPS.map((x, k) => (
-          <span key={x.l} className={k === i ? '' : 'pressed-sm'} style={{ width: 52, height: 52, borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 800, background: k === i ? 'var(--primary)' : undefined, color: k === i ? 'var(--onp)' : k < i ? 'var(--accent)' : 'var(--muted)', transition: 'all .4s' }}>{x.l}</span>
+          <span key={x.l} className={k === i ? '' : 'pressed-sm'} style={{ width: 52, height: 52, borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.375rem', fontWeight: 800, background: k === i ? 'var(--primary)' : undefined, color: k === i ? 'var(--onp)' : k < i ? 'var(--accent)' : 'var(--muted)', transition: 'all .4s' }}>{x.l}</span>
         ))}
       </div>
       <div style={{ marginTop: 18 }} className={i === 1 && !paused ? 'breathe-slow' : ''}><Mo size={i === 1 ? 150 : i === 2 ? 84 : 120} mood={i === 1 ? 'breathe' : i === 3 ? 'happy' : 'calm'} /></div>
@@ -110,19 +110,19 @@ function StopPractice({ sec, paused, onDone }) {
         <div className="col" style={{ gap: 10, width: '100%', marginTop: 12 }}>
           {Object.entries(OBS).map(([k, opts]) => (
             <div key={k} role="radiogroup" aria-label={k} className="row" style={{ gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-              <span className="muted" style={{ width: '100%', fontSize: 12, fontWeight: 800, letterSpacing: '.06em', textTransform: 'uppercase' }}>{k}</span>
-              {opts.map((o) => <button key={o} type="button" role="radio" aria-checked={obs[k] === o} className={'chip press' + (obs[k] === o ? ' on' : '')} style={{ fontSize: 14 }} onClick={() => setObs({ ...obs, [k]: o })}>{o}</button>)}
+              <span className="muted" style={{ width: '100%', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '.06em', textTransform: 'uppercase' }}>{k}</span>
+              {opts.map((o) => <button key={o} type="button" role="radio" aria-checked={obs[k] === o} className={'chip press' + (obs[k] === o ? ' on' : '')} style={{ fontSize: '0.875rem' }} onClick={() => setObs({ ...obs, [k]: o })}>{o}</button>)}
             </div>
           ))}
         </div>
       ) : null}
       {i === 3 ? (
         <div role="radiogroup" aria-label="Next step" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,minmax(0,1fr))', gap: 10, width: '100%', marginTop: 12 }}>
-          {NEXT.map((o) => <button key={o} type="button" role="radio" aria-checked={next === o} className={'chip press' + (next === o ? ' on' : '')} style={{ fontSize: 14, padding: '0 8px' }} onClick={() => setNext(o)}>{o}</button>)}
+          {NEXT.map((o) => <button key={o} type="button" role="radio" aria-checked={next === o} className={'chip press' + (next === o ? ' on' : '')} style={{ fontSize: '0.875rem', padding: '0 8px' }} onClick={() => setNext(o)}>{o}</button>)}
         </div>
       ) : null}
       <div className="grow" />
-      {i < 3 || sec < STEP * 4 ? <p className="muted tnum" style={{ fontSize: 13, fontWeight: 700, margin: '14px 0 0' }}>{paused ? 'Paused' : `Next step in ${left} s`}</p> : null}
+      {i < 3 || sec < STEP * 4 ? <p className="muted tnum" style={{ fontSize: '0.8125rem', fontWeight: 700, margin: '14px 0 0' }}>{paused ? 'Paused' : `Next step in ${left} s`}</p> : null}
       {i === 3 ? <button className="btn btn-primary press" style={{ marginTop: 12 }} disabled={!next} onClick={onDone}>{next ? `Proceed: ${next.toLowerCase()}` : 'Pick a next step'}</button> : null}
     </>
   );
@@ -154,20 +154,20 @@ function Grounding({ onDone, paused }) {
       <div className="row" style={{ gap: 8, marginTop: 22 }} aria-hidden="true">
         {SENSES.map((x, k) => <span key={x.verb} style={{ width: k === stage ? 28 : 10, height: 10, borderRadius: 5, background: k <= stage ? 'var(--primary)' : 'var(--line)', transition: 'all .3s' }} />)}
       </div>
-      <p className="muted" style={{ margin: '18px 0 0', fontSize: 13, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase' }}>Step {stage + 1} of 5</p>
-      <h1 className="h1" style={{ marginTop: 6, textAlign: 'center', fontSize: 30 }} aria-live="polite">Notice {S.n} {S.n === 1 ? 'thing' : 'things'} you can {S.verb}</h1>
+      <p className="muted" style={{ margin: '18px 0 0', fontSize: '0.8125rem', fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase' }}>Step {stage + 1} of 5</p>
+      <h1 className="h1" style={{ marginTop: 6, textAlign: 'center', fontSize: '1.875rem' }} aria-live="polite">Notice {S.n} {S.n === 1 ? 'thing' : 'things'} you can {S.verb}</h1>
       <p className="lead" style={{ textAlign: 'center', marginTop: 6 }}>{S.hint}</p>
       <div className="grow" style={{ minHeight: 12 }} />
       <button type="button" className="raised press" onClick={tap} aria-label={`I noticed one. ${got} of ${S.n}`}
         style={{ width: 220, height: 220, borderRadius: '50%', border: 0, cursor: 'pointer', position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, color: 'var(--ink)', flexShrink: 0 }}>
         <span key={pop} className={pop ? 'mo-poke' : ''} style={{ display: 'flex' }}><Mo size={120} mood={got ? 'happy' : 'curious'} glow={false} label="" /></span>
-        <span style={{ fontWeight: 800, fontSize: 16, color: 'var(--accent)' }}>I noticed one</span>
+        <span style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--accent)' }}>I noticed one</span>
       </button>
       <div className="row" style={{ gap: 10, marginTop: 18 }} role="img" aria-label={`${got} of ${S.n}`}>
         {Array.from({ length: S.n }).map((_, k) => <span key={k} className={k < got ? '' : 'pressed-sm'} style={{ width: 18, height: 18, borderRadius: '50%', background: k < got ? 'var(--primary)' : undefined, transition: 'background .3s' }} />)}
       </div>
       <div className="grow" style={{ minHeight: 12 }} />
-      <p className="muted" style={{ fontSize: 13, margin: '10px 0 0', textAlign: 'center' }}>Say them in your head or out loud. Take your time.</p>
+      <p className="muted" style={{ fontSize: '0.8125rem', margin: '10px 0 0', textAlign: 'center' }}>Say them in your head or out loud. Take your time.</p>
     </>
   );
 }
@@ -198,7 +198,7 @@ function BodyScan({ sec, paused, onDone, speed }) {
   const fill = (r) => (phase === 'scan' ? (r.id === cur.id ? 'var(--primary)' : REGIONS.indexOf(r) < i ? 'rgba(140,123,224,.32)' : 'rgba(140,123,224,.1)') : tense.includes(r.id) ? '#F4A6C6' : 'rgba(140,123,224,.16)');
   return (
     <>
-      <h1 className="h2" style={{ marginTop: 18, textAlign: 'center', fontSize: 22 }} aria-live="polite">{phase === 'map' ? 'Where do you feel tension today?' : cur.name}</h1>
+      <h1 className="h2" style={{ marginTop: 18, textAlign: 'center', fontSize: '1.375rem' }} aria-live="polite">{phase === 'map' ? 'Where do you feel tension today?' : cur.name}</h1>
       <p className="lead" style={{ textAlign: 'center', marginTop: 6, minHeight: 48 }}>{phase === 'map' ? 'Tap the body or the names. Mo will stay longer there.' : cur.cue + (tense.includes(cur.id) ? ' Mo will stay here a little longer.' : '')}</p>
       <div className="row" style={{ gap: 4, marginTop: 6, alignItems: 'flex-end' }}>
         <svg viewBox="0 0 222 360" width="170" height="276" aria-hidden="true" style={{ flexShrink: 0 }}>
@@ -212,7 +212,7 @@ function BodyScan({ sec, paused, onDone, speed }) {
       {phase === 'map' ? (
         <>
           <div role="group" aria-label="Where you feel tension" className="row" style={{ gap: 8, flexWrap: 'wrap', justifyContent: 'center', marginTop: 12 }}>
-            {REGIONS.map((r) => <button key={r.id} type="button" aria-pressed={tense.includes(r.id)} className={'chip press' + (tense.includes(r.id) ? ' on' : '')} style={{ fontSize: 14 }} onClick={() => toggle(r.id)}>{r.name}</button>)}
+            {REGIONS.map((r) => <button key={r.id} type="button" aria-pressed={tense.includes(r.id)} className={'chip press' + (tense.includes(r.id) ? ' on' : '')} style={{ fontSize: '0.875rem' }} onClick={() => toggle(r.id)}>{r.name}</button>)}
           </div>
           <div className="grow" style={{ minHeight: 12 }} />
           <button className="btn btn-primary press" style={{ marginTop: 14 }} onClick={() => { setPhase('scan'); setT0(sec); }}>{tense.length ? 'Start the scan' : 'Nowhere in particular · start'}</button>
@@ -247,7 +247,7 @@ export function KindnessSky({ count, small, fresh = 0 }) {
         <circle cx="176" cy="22" r="11" fill="#FFF3D1" opacity=".9" /><circle cx="181" cy="18" r="10" fill="#3B2A7A" />
         {stars.map((st, k) => <path key={k} d={`M${st.x} ${st.y - st.r * 1.8}L${st.x + st.r * 0.5} ${st.y - st.r * 0.5}L${st.x + st.r * 1.8} ${st.y}L${st.x + st.r * 0.5} ${st.y + st.r * 0.5}L${st.x} ${st.y + st.r * 1.8}L${st.x - st.r * 0.5} ${st.y + st.r * 0.5}L${st.x - st.r * 1.8} ${st.y}L${st.x - st.r * 0.5} ${st.y - st.r * 0.5}Z`} fill="#FFE9A8" opacity={k >= n - fresh ? 1 : 0.8} className={k >= n - fresh ? 'star-new' : ''} />)}
       </svg>
-      <span style={{ position: 'absolute', left: 14, bottom: 10, color: '#F3EEFF', fontSize: 13, fontWeight: 800 }}>{count ? `${count} kind ${count === 1 ? 'wish' : 'wishes'} in your sky` : 'Your kindness sky is waiting'}</span>
+      <span style={{ position: 'absolute', left: 14, bottom: 10, color: '#F3EEFF', fontSize: '0.8125rem', fontWeight: 800 }}>{count ? `${count} kind ${count === 1 ? 'wish' : 'wishes'} in your sky` : 'Your kindness sky is waiting'}</span>
     </div>
   );
 }
@@ -279,9 +279,9 @@ function Metta({ onDone, paused }) {
   return (
     <>
       <div style={{ width: '100%', marginTop: 16 }}><KindnessSky count={s.kindness || 0} fresh={sent} /></div>
-      <p className="muted" style={{ margin: '16px 0 0', fontSize: 13, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase' }}>{r + 1} of {ROUNDS.length} · {R.who}</p>
+      <p className="muted" style={{ margin: '16px 0 0', fontSize: '0.8125rem', fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase' }}>{r + 1} of {ROUNDS.length} · {R.who}</p>
       <div className="col" style={{ gap: 4, marginTop: 8, alignItems: 'center', minHeight: 76 }} aria-live="polite">
-        {R.p.map((x) => <p key={x} style={{ margin: 0, fontSize: 18, fontWeight: 700, textAlign: 'center', lineHeight: 1.4, color: 'var(--ink)' }}>{x}</p>)}
+        {R.p.map((x) => <p key={x} style={{ margin: 0, fontSize: '1.125rem', fontWeight: 700, textAlign: 'center', lineHeight: 1.4, color: 'var(--ink)' }}>{x}</p>)}
       </div>
       <div className="grow" style={{ minHeight: 8 }} />
       <button type="button" aria-label={`Hold to send kindness to ${R.who.toLowerCase()}`}
@@ -296,7 +296,7 @@ function Metta({ onDone, paused }) {
         </svg>
         <span className={hold > 0 ? 'pressed' : 'raised'} style={{ width: 128, height: 128, borderRadius: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2, color: 'var(--ink)' }}>
           <Icon name="heart" size={30} style={{ color: '#D9779F' }} />
-          <span style={{ fontSize: 13, fontWeight: 800 }}>{hold >= 1 ? 'Sent' : 'Hold to send'}</span>
+          <span style={{ fontSize: '0.8125rem', fontWeight: 800 }}>{hold >= 1 ? 'Sent' : 'Hold to send'}</span>
         </span>
       </button>
       {R.optional ? <button className="btn-text" style={{ marginTop: 6 }} onClick={() => setR(r + 1)}>Skip this one</button> : <span style={{ height: 50 }} />}
@@ -310,16 +310,16 @@ export function PracticesRow() {
   return (
     <>
       <div style={{ marginTop: 24 }}>
-        <h2 className="h2" style={{ fontSize: 17 }}>Practices</h2>
-        <p className="muted" style={{ margin: '4px 0 0', fontSize: 13, fontWeight: 600 }}>Short, hands-on mindfulness. You do them with Mo.</p>
+        <h2 className="h2" style={{ fontSize: '1.0625rem' }}>Practices</h2>
+        <p className="muted" style={{ margin: '4px 0 0', fontSize: '0.8125rem', fontWeight: 600 }}>Short, hands-on mindfulness. You do them with Mo.</p>
       </div>
       <div className="hscroll">
         {PRACTICE_LIB.map((p) => (
           <button key={p.id} className="raised press col" onClick={() => nav.push('practice', { id: p.id })}
             style={{ flexShrink: 0, width: 156, border: 0, borderRadius: 22, padding: 8, gap: 6, textAlign: 'left', cursor: 'pointer', color: 'var(--ink)', alignItems: 'stretch' }}>
             <span style={{ height: 76, borderRadius: 16, background: grad(p), display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2A1E52' }}><Icon name={p.icon} size={30} sw={1.6} /></span>
-            <span style={{ margin: '4px 4px 0', fontSize: 14, fontWeight: 800, lineHeight: 1.25 }}>{p.name}</span>
-            <span className="muted tnum" style={{ margin: '0 4px 4px', fontSize: 12, fontWeight: 600 }}>{p.min} min{p.plus && !s.user.plus ? ' · Plus' : ' · Free'}</span>
+            <span style={{ margin: '4px 4px 0', fontSize: '0.875rem', fontWeight: 800, lineHeight: 1.25 }}>{p.name}</span>
+            <span className="muted tnum" style={{ margin: '0 4px 4px', fontSize: '0.75rem', fontWeight: 600 }}>{p.min} min{p.plus && !s.user.plus ? ' · Plus' : ' · Free'}</span>
           </button>
         ))}
       </div>

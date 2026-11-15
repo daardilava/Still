@@ -51,11 +51,11 @@ export function IntentionSheet() {
       <label className="col" style={{ gap: 8, marginTop: 6 }}>
         <span className="sr-only">Your intention</span>
         <textarea value={v} maxLength={80} rows={2} onChange={(e) => setV(e.target.value)} placeholder="I want to…" className="pressed"
-          style={{ border: 0, outline: 'none', resize: 'none', borderRadius: 22, padding: '14px 18px', fontSize: 16, lineHeight: 1.4, fontFamily: 'inherit', color: 'var(--ink)' }} />
+          style={{ border: 0, resize: 'none', borderRadius: 22, padding: '14px 18px', fontSize: '1rem', lineHeight: 1.4, fontFamily: 'inherit', color: 'var(--ink)' }} />
       </label>
-      <span className="muted tnum" style={{ alignSelf: 'flex-end', fontSize: 12, fontWeight: 700, marginTop: 6 }}>{v.length}/80</span>
+      <span className="muted tnum" style={{ alignSelf: 'flex-end', fontSize: '0.75rem', fontWeight: 700, marginTop: 6 }}>{v.length}/80</span>
       <div className="row" style={{ gap: 10, flexWrap: 'wrap', marginTop: 6 }}>
-        {IDEAS.map((i) => <button key={i} type="button" className="chip press" style={{ fontSize: 14 }} onClick={() => setV(i)}>{i}</button>)}
+        {IDEAS.map((i) => <button key={i} type="button" className="chip press" style={{ fontSize: '0.875rem' }} onClick={() => setV(i)}>{i}</button>)}
       </div>
       <button className="btn btn-primary press" style={{ marginTop: 18 }} onClick={() => { set({ intention: v.trim() }); closeSheet(); toast(v.trim() ? 'Mo will keep it in mind.' : 'Intention cleared.'); }}>Save</button>
     </>
@@ -72,9 +72,9 @@ export function GoalSheet() {
       <SheetTitle title="Weekly goal" sub="Pick what fits your life. A goal you choose is one you keep." />
       <div className="pressed" style={{ marginTop: 8, padding: '14px 18px', borderRadius: 26 }}>
         <Stepper label="Days per week" value={days} min={1} max={7} unit="" onChange={setDays} />
-        <p className="accent" style={{ margin: '8px 0 0', fontSize: 13, fontWeight: 700 }}>{days === 7 ? 'Every day' : days <= 2 ? 'A gentle start' : days <= 4 ? 'A steady habit' : 'A strong practice'}</p>
+        <p className="accent" style={{ margin: '8px 0 0', fontSize: '0.8125rem', fontWeight: 700 }}>{days === 7 ? 'Every day' : days <= 2 ? 'A gentle start' : days <= 4 ? 'A steady habit' : 'A strong practice'}</p>
       </div>
-      <p className="muted" style={{ margin: '12px 4px 0', fontSize: 13, lineHeight: 1.4 }}>Any session, story or timer over one minute counts as a day.</p>
+      <p className="muted" style={{ margin: '12px 4px 0', fontSize: '0.8125rem', lineHeight: 1.4 }}>Any session, story or timer over one minute counts as a day.</p>
       <button className="btn btn-primary press" style={{ marginTop: 16 }} onClick={() => { set({ weeklyGoal: days }); closeSheet(); toast(`Goal set: ${days} ${days === 1 ? 'day' : 'days'} a week.`); }}>Set goal</button>
     </>
   );
@@ -88,8 +88,8 @@ export function GoalRing({ done, goal, size = 96 }) {
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--primary)" strokeWidth="8" strokeLinecap="round" strokeDasharray={`${c * pct} ${c}`} transform={`rotate(-90 ${size / 2} ${size / 2})`} style={{ transition: 'stroke-dasharray .5s ease-out' }} />
       </svg>
       <span className="col" style={{ alignItems: 'center', lineHeight: 1.1 }} aria-hidden="true">
-        {done >= goal ? <Icon name="check" size={26} sw={3} style={{ color: 'var(--accent)' }} /> : <span className="tnum" style={{ fontSize: 24, fontWeight: 800 }}>{done}<span className="muted" style={{ fontSize: 15 }}>/{goal}</span></span>}
-        <span className="muted" style={{ fontSize: 11, fontWeight: 800 }}>{done >= goal ? 'done' : 'days'}</span>
+        {done >= goal ? <Icon name="check" size={26} sw={3} style={{ color: 'var(--accent)' }} /> : <span className="tnum" style={{ fontSize: '1.5rem', fontWeight: 800 }}>{done}<span className="muted" style={{ fontSize: '0.9375rem' }}>/{goal}</span></span>}
+        <span className="muted" style={{ fontSize: '0.6875rem', fontWeight: 800 }}>{done >= goal ? 'done' : 'days'}</span>
       </span>
     </span>
   );
@@ -125,21 +125,21 @@ export function MoonCalendar({ history }) {
   return (
     <div className="raised" style={{ marginTop: 18, padding: '16px 14px 14px', borderRadius: 26 }}>
       <div className="row" style={{ justifyContent: 'space-between', padding: '0 4px' }}>
-        <h2 className="h2" style={{ fontSize: 16 }}>{month}</h2>
-        <span className="muted tnum" style={{ fontSize: 13, fontWeight: 600 }}>{practised} {practised === 1 ? 'day' : 'days'} with Mo</span>
+        <h2 className="h2" style={{ fontSize: '1rem' }}>{month}</h2>
+        <span className="muted tnum" style={{ fontSize: '0.8125rem', fontWeight: 600 }}>{practised} {practised === 1 ? 'day' : 'days'} with Mo</span>
       </div>
       <div role="img" aria-label={`${month}: you practised on ${practised} days. ` + cells.filter((c) => c.n).map((c) => `${c.d}: ${c.n} minutes`).join(', ')}
         style={{ display: 'grid', gridTemplateColumns: 'repeat(7,minmax(0,1fr))', rowGap: 4, marginTop: 10, justifyItems: 'center' }}>
-        {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => <span key={'h' + i} className="muted" style={{ fontSize: 11, fontWeight: 800, paddingBottom: 2 }}>{d}</span>)}
+        {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => <span key={'h' + i} className="muted" style={{ fontSize: '0.6875rem', fontWeight: 800, paddingBottom: 2 }}>{d}</span>)}
         {Array.from({ length: lead }).map((_, i) => <span key={'e' + i} />)}
         {cells.map((c) => (
           <span key={c.d} className="col" style={{ alignItems: 'center' }}>
             <Moon level={c.level} today={c.today} future={c.future} />
-            <span className="tnum" style={{ fontSize: 10, fontWeight: c.today ? 800 : 600, color: c.today ? 'var(--accent)' : 'var(--muted)', marginTop: -2 }}>{c.d}</span>
+            <span className="tnum" style={{ fontSize: '0.625rem', fontWeight: c.today ? 800 : 600, color: c.today ? 'var(--accent)' : 'var(--muted)', marginTop: -2 }}>{c.d}</span>
           </span>
         ))}
       </div>
-      <div className="row muted" style={{ gap: 14, marginTop: 10, justifyContent: 'center', fontSize: 12, fontWeight: 700 }}>
+      <div className="row muted" style={{ gap: 14, marginTop: 10, justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>
         <span className="row" style={{ gap: 2 }}><Moon level={1} />under 10 min</span>
         <span className="row" style={{ gap: 2 }}><Moon level={2} />10–19</span>
         <span className="row" style={{ gap: 2 }}><Moon level={3} />20+</span>
@@ -177,7 +177,7 @@ export function Milestones() {
     <>
       <div className="row" style={{ justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <h2 className="label">Milestones</h2>
-        <span className="muted tnum" style={{ fontSize: 13, fontWeight: 700, margin: '0 6px 10px 0' }}>{earned.length} of {list.length}</span>
+        <span className="muted tnum" style={{ fontSize: '0.8125rem', fontWeight: 700, margin: '0 6px 10px 0' }}>{earned.length} of {list.length}</span>
       </div>
       <div className="raised" style={{ borderRadius: 26, padding: '6px 16px' }}>
         <ol style={{ listStyle: 'none', margin: 0, padding: 0 }}>
@@ -188,11 +188,11 @@ export function Milestones() {
                 <Icon name={m.done ? 'check' : m.icon} size={m.done ? 18 : 16} sw={m.done ? 2.8 : 2} />
               </span>
               <span className="col grow" style={{ gap: 4, minWidth: 0 }}>
-                <span style={{ fontWeight: 800, fontSize: 15, color: m.done ? 'var(--ink)' : 'var(--body)' }}>{m.title}</span>
-                {m.done ? <span className="muted" style={{ fontSize: 12, fontWeight: 600 }}>{date(m.id)}</span> : (
+                <span style={{ fontWeight: 800, fontSize: '0.9375rem', color: m.done ? 'var(--ink)' : 'var(--body)' }}>{m.title}</span>
+                {m.done ? <span className="muted" style={{ fontSize: '0.75rem', fontWeight: 600 }}>{date(m.id)}</span> : (
                   <span className="row" style={{ gap: 10 }}>
                     <span className="track grow" style={{ height: 10, padding: 2 }} role="progressbar" aria-label={m.title} aria-valuemin={0} aria-valuemax={m.need} aria-valuenow={m.have}><span style={{ height: 6, width: (m.have / m.need) * 100 + '%' }} /></span>
-                    <span className="muted tnum" style={{ fontSize: 12, fontWeight: 800, whiteSpace: 'nowrap' }}>{m.have}/{m.need}</span>
+                    <span className="muted tnum" style={{ fontSize: '0.75rem', fontWeight: 800, whiteSpace: 'nowrap' }}>{m.have}/{m.need}</span>
                   </span>
                 )}
               </span>

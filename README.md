@@ -157,3 +157,22 @@ Four hands-on practices in Explore › Practices. Each has an intro (what it is,
 Scripts are placeholders to be reviewed by a certified mindfulness teacher before launch.
 
 QA: a button crawler presses every button on every screen (and inside every sheet/dialog it opens) on a fresh app and checks each one does something with no errors; plus flow scripts for every journey.
+
+## v11: Audit fixes (accessibility, robustness, privacy)
+
+**Accessibility**
+- Opening a screen moves focus to its heading and names the page after it, so VoiceOver/TalkBack announce where you are. Every screen has a main heading.
+- Pop-ups (sheets and dialogs) keep keyboard focus inside them; closing returns focus to the button that opened them.
+- Text sizes are in `rem`, so they follow the browser/phone default; Settings › Appearance › Text size adds Large / Larger / Largest (like Dynamic Type). Checked for overflow at Largest.
+- Search, "Tell Mo" and intention fields show a visible focus ring.
+
+**Robustness**
+- A crash shows "Mo tripped over something" with Try again / Reset app data instead of a blank page.
+- Saved data is checked against the expected shape (and versioned), so old or damaged data can't crash the app.
+
+**Privacy (GDPR)**
+- New onboarding step "Your data, your choice": confirm 16+ (required), and two separate opt-ins, both off by default: *Save how I feel* (health data: check-ins, moods, answers to Mo) and *Personal sessions with AI*. People who installed before are asked once.
+- With mood saving off: no check-in, no mood buttons, no Mo questions; an inline card lets you turn it on. Turning it off later offers to delete saved moods.
+- With AI off: personal sessions, chapters and letters use Mo's built-in words; compose explains what AI would send.
+- Settings › Privacy: both switches plus **Download my data** (a JSON file of everything Still keeps).
+- No request to Google: the font is self-hosted (see `public/fonts/README.md`); until the file is added, the system font is used.

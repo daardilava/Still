@@ -36,18 +36,18 @@ export function Program({ id }) {
         <span className="tag">Program</span><span className="tag tnum">{total} days</span>
         {p.plus && !s.user.plus ? <PlusTag /> : null}
       </div>
-      <h1 className="h1" style={{ marginTop: 12, fontSize: 28 }}>{p.title}</h1>
+      <h1 className="h1" style={{ marginTop: 12, fontSize: '1.75rem' }}>{p.title}</h1>
       <p className="lead">{p.desc}</p>
 
       <div className="raised" style={{ marginTop: 18, padding: '14px 16px', borderRadius: 22 }}>
         <div className="row" style={{ justifyContent: 'space-between' }}>
-          <span style={{ fontWeight: 800, fontSize: 15 }}>{finished ? 'Program complete' : done ? `Day ${done} of ${total} done` : 'Not started yet'}</span>
+          <span style={{ fontWeight: 800, fontSize: '0.9375rem' }}>{finished ? 'Program complete' : done ? `Day ${done} of ${total} done` : 'Not started yet'}</span>
           <span className="tnum accent" style={{ fontWeight: 800 }}>{Math.round((done / total) * 100)}%</span>
         </div>
         <div className="track" style={{ marginTop: 10 }} role="progressbar" aria-label={`${done} of ${total} days done`} aria-valuemin={0} aria-valuemax={total} aria-valuenow={done}>
           <span style={{ width: (done / total) * 100 + '%' }} />
         </div>
-        <p className="muted" style={{ margin: '10px 0 0', fontSize: 13, lineHeight: 1.4 }}>Missing a day just pauses the program. Mo keeps your place.</p>
+        <p className="muted" style={{ margin: '10px 0 0', fontSize: '0.8125rem', lineHeight: 1.4 }}>Missing a day just pauses the program. Mo keeps your place.</p>
       </div>
 
       <h2 className="label">Days</h2>
@@ -57,7 +57,7 @@ export function Program({ id }) {
           return (
             <button key={d.n} type="button" className="lrow press" onClick={() => open(d.n)} aria-label={`Day ${d.n}, ${d.title}, ${d.min} minutes${isDone ? ', done' : isLocked ? ', needs Still Plus' : waiting ? ', not unlocked yet' : ''}`}>
               <span className="ico" style={isNext ? { background: 'var(--primary)', color: 'var(--onp)', boxShadow: 'none' } : undefined}>
-                {isDone ? <Icon name="check" size={18} sw={2.6} /> : isNext && !isLocked ? <Icon name="play" size={14} /> : isLocked ? <Icon name="lock" size={16} /> : <span className="tnum" style={{ fontWeight: 800, fontSize: 14 }}>{d.n}</span>}
+                {isDone ? <Icon name="check" size={18} sw={2.6} /> : isNext && !isLocked ? <Icon name="play" size={14} /> : isLocked ? <Icon name="lock" size={16} /> : <span className="tnum" style={{ fontWeight: 800, fontSize: '0.875rem' }}>{d.n}</span>}
               </span>
               <span className="col grow" style={{ minWidth: 0 }}>
                 <span className="t" style={{ color: waiting && !isLocked ? 'var(--muted)' : undefined }}>Day {d.n} · {d.title}</span>
@@ -123,14 +123,14 @@ export function Story({ id }) {
         <div className="frame-in" style={{ height: 250 }}><img src={st.img} alt="" style={{ objectPosition: st.pos, filter: s.dark ? 'brightness(.85)' : undefined }} /></div>
         <div style={{ position: 'absolute', right: 18, bottom: 8 }}><Mo size={96} mood={pct > 0.5 ? 'sleepy' : 'calm'} glow={false} /></div>
       </div>
-      <h1 style={{ margin: '22px 0 0', fontSize: 24, fontWeight: 800, textAlign: 'center', letterSpacing: '-0.01em' }}>{st.title}</h1>
-      <p className="muted" style={{ margin: '4px 0 0', fontSize: 14, fontWeight: 600 }}>Read by {st.narrator}</p>
+      <h1 style={{ margin: '22px 0 0', fontSize: '1.5rem', fontWeight: 800, textAlign: 'center', letterSpacing: '-0.01em' }}>{st.title}</h1>
+      <p className="muted" style={{ margin: '4px 0 0', fontSize: '0.875rem', fontWeight: 600 }}>Read by {st.narrator}</p>
 
       <div style={{ width: '100%', marginTop: 18 }}>
         <div className="track" role="progressbar" aria-label="Story progress" aria-valuemin={0} aria-valuemax={total} aria-valuenow={elapsed} aria-valuetext={`${fmt(elapsed)} of ${fmt(total)}`}>
           <span style={{ width: pct * 100 + '%', transition: 'width 1s linear' }} />
         </div>
-        <div className="row tnum muted" style={{ justifyContent: 'space-between', marginTop: 6, fontSize: 13, fontWeight: 800 }}>
+        <div className="row tnum muted" style={{ justifyContent: 'space-between', marginTop: 6, fontSize: '0.8125rem', fontWeight: 800 }}>
           <span className="accent">{fmt(elapsed)}</span>
           {stop.at ? <span className="tag"><Icon name="moon" size={11} sw={2.4} />Stops in {fmt(Math.max(0, stop.at - elapsed))}</span> : null}
           <span>−{fmt(total - elapsed)}</span>
@@ -153,7 +153,7 @@ export function Story({ id }) {
         <button className="icon-btn press ctrl-skip" style={{ width: 56, height: 56, color: 'var(--accent)' }} aria-label="Dim the screen now" onClick={() => setDimmed(true)}><Icon name="moon" size={22} /></button>
       </div>
       <div className="grow" style={{ minHeight: 12 }} />
-      <p className="muted" style={{ fontSize: 13, textAlign: 'center', margin: '12px 0 0' }}>{s.autoDim ? 'The screen dims on its own after a few quiet seconds.' : 'Tip: turn on “Dim screen in sleep sessions” in Settings.'}</p>
+      <p className="muted" style={{ fontSize: '0.8125rem', textAlign: 'center', margin: '12px 0 0' }}>{s.autoDim ? 'The screen dims on its own after a few quiet seconds.' : 'Tip: turn on “Dim screen in sleep sessions” in Settings.'}</p>
 
       {showText ? <TranscriptPanel elapsed={elapsed} total={total} title={st.title} lines={st.lines} onClose={() => setShowText(false)} /> : null}
       {dimmed ? (
@@ -240,8 +240,8 @@ export function SleepTab() {
         style={{ marginTop: 18, width: '100%', border: 0, borderRadius: 26, padding: '12px 16px 12px 6px', gap: 8, textAlign: 'left', cursor: 'pointer', color: 'var(--ink)' }}>
         <Mo size={72} mood="sleepy" glow={false} />
         <span className="col grow" style={{ gap: 3, minWidth: 0 }}>
-          <span className="row" style={{ gap: 8 }}><span style={{ fontWeight: 800, fontSize: 16 }}>Wind-down at 22:30</span>{!plus ? <PlusTag /> : null}</span>
-          <span className="muted" style={{ fontSize: 13, lineHeight: 1.4 }}>A reminder, 3 minutes of slow breathing, then a story. The screen dims by itself.</span>
+          <span className="row" style={{ gap: 8 }}><span style={{ fontWeight: 800, fontSize: '1rem' }}>Wind-down at 22:30</span>{!plus ? <PlusTag /> : null}</span>
+          <span className="muted" style={{ fontSize: '0.8125rem', lineHeight: 1.4 }}>A reminder, 3 minutes of slow breathing, then a story. The screen dims by itself.</span>
         </span>
         <SwitchVisual on={!!s.windDown} />
       </button>
@@ -254,8 +254,8 @@ export function SleepTab() {
         <span className="row" style={{ gap: 12, padding: '12px 8px 4px', width: '100%' }}>
           <span className="col grow" style={{ gap: 4, minWidth: 0 }}>
             <span className="row" style={{ gap: 8 }}><span className="tag tnum">{tonight.min} min</span><FreeTag /></span>
-            <span style={{ fontSize: 19, fontWeight: 800 }}>{tonight.title}</span>
-            <span className="muted" style={{ fontSize: 13, lineHeight: 1.4 }}>{tonight.blurb}</span>
+            <span style={{ fontSize: '1.1875rem', fontWeight: 800 }}>{tonight.title}</span>
+            <span className="muted" style={{ fontSize: '0.8125rem', lineHeight: 1.4 }}>{tonight.blurb}</span>
           </span>
           <span style={{ width: 52, height: 52, borderRadius: '50%', background: 'var(--primary)', color: 'var(--onp)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: 'var(--up-sm), var(--glow)' }}><Icon name="play" size={17} /></span>
         </span>
@@ -267,8 +267,8 @@ export function SleepTab() {
           <button key={st.id} className="raised press row" onClick={() => openStory(st)} style={{ border: 0, borderRadius: 22, padding: 10, gap: 12, textAlign: 'left', cursor: 'pointer', color: 'var(--ink)' }}>
             <img src={st.img} alt="" style={{ width: 58, height: 58, borderRadius: 16, objectFit: 'cover', objectPosition: st.pos }} />
             <span className="col grow" style={{ minWidth: 0, gap: 2 }}>
-              <span style={{ fontWeight: 800, fontSize: 15 }}>{st.title}</span>
-              <span className="muted" style={{ fontSize: 12, fontWeight: 600 }}>{st.min} min · {st.narrator}</span>
+              <span style={{ fontWeight: 800, fontSize: '0.9375rem' }}>{st.title}</span>
+              <span className="muted" style={{ fontSize: '0.75rem', fontWeight: 600 }}>{st.min} min · {st.narrator}</span>
             </span>
             {st.plus && !plus ? <PlusTag /> : <Icon name="play" size={15} style={{ color: 'var(--accent)' }} />}
           </button>
@@ -281,16 +281,16 @@ export function SleepTab() {
           <div key={m.id} style={{ position: 'relative', display: 'flex' }}>
             <button className="raised press col" onClick={() => playMix(m)} style={{ flex: 1, border: 0, borderRadius: 22, padding: '14px 14px 12px', gap: 8, alignItems: 'flex-start', textAlign: 'left', cursor: 'pointer', color: 'var(--ink)', minHeight: 92 }}>
               <MixDots m={m} />
-              <span style={{ fontWeight: 800, fontSize: 15, paddingRight: m.preset ? 0 : 34 }}>{m.name}</span>
-              <span className="muted" style={{ fontSize: 12, fontWeight: 600 }}>{m.preset ? 'Built in' : 'Your mix'}</span>
+              <span style={{ fontWeight: 800, fontSize: '0.9375rem', paddingRight: m.preset ? 0 : 34 }}>{m.name}</span>
+              <span className="muted" style={{ fontSize: '0.75rem', fontWeight: 600 }}>{m.preset ? 'Built in' : 'Your mix'}</span>
             </button>
             {!m.preset ? <button className="press" aria-label={`Edit ${m.name}`} onClick={() => sheet(<MixSheet edit={m} />)}
               style={{ position: 'absolute', top: 2, right: 2, width: 48, height: 48, border: 0, background: 'none', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--muted)', cursor: 'pointer' }}><Icon name="edit" size={17} /></button> : null}
           </div>
         ))}
-        <button className="pressed press col" onClick={newMix} style={{ border: 0, borderRadius: 22, padding: 14, gap: 6, alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--accent)', minHeight: 92, fontWeight: 800, fontSize: 14 }}>
+        <button className="pressed press col" onClick={newMix} style={{ border: 0, borderRadius: 22, padding: 14, gap: 6, alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--accent)', minHeight: 92, fontWeight: 800, fontSize: '0.875rem' }}>
           <Icon name="plus" size={20} sw={2.4} />New mix
-          {mixes.length >= 1 && !plus ? <span className="muted" style={{ fontSize: 11, fontWeight: 700 }}>Plus: unlimited</span> : <span className="muted" style={{ fontSize: 11, fontWeight: 700 }}>{plus ? 'Unlimited' : '1 free mix'}</span>}
+          {mixes.length >= 1 && !plus ? <span className="muted" style={{ fontSize: '0.6875rem', fontWeight: 700 }}>Plus: unlimited</span> : <span className="muted" style={{ fontSize: '0.6875rem', fontWeight: 700 }}>{plus ? 'Unlimited' : '1 free mix'}</span>}
         </button>
       </div>
 
@@ -309,10 +309,10 @@ export function ProgramCard({ p, done = 0, wide }) {
       style={{ flexShrink: 0, width: wide ? '100%' : 230, border: 0, borderRadius: 24, padding: 8, textAlign: 'left', cursor: 'pointer', color: 'var(--ink)', display: 'flex', flexDirection: 'column' }}>
       <img src={p.img} alt="" style={{ width: '100%', height: wide ? 120 : 96, objectFit: 'cover', borderRadius: 18, objectPosition: p.pos }} />
       <span className="row" style={{ gap: 6, margin: '10px 6px 0' }}><span className="tag tnum">{total} days</span>{p.plus && !s.user.plus ? <span className="tag">Day 1 free</span> : null}</span>
-      <span style={{ display: 'block', margin: '8px 6px 0', fontSize: 16, fontWeight: 800, lineHeight: 1.25 }}>{p.title}</span>
+      <span style={{ display: 'block', margin: '8px 6px 0', fontSize: '1rem', fontWeight: 800, lineHeight: 1.25 }}>{p.title}</span>
       <span className="row" style={{ gap: 10, margin: '10px 6px 6px', width: 'calc(100% - 12px)' }}>
         <span className="track grow" style={{ height: 10, padding: 2 }}><span style={{ height: 6, width: (done / total) * 100 + '%' }} /></span>
-        <span className="tnum muted" style={{ fontSize: 12, fontWeight: 800, whiteSpace: 'nowrap' }}>{done ? `${done}/${total}` : 'Start'}</span>
+        <span className="tnum muted" style={{ fontSize: '0.75rem', fontWeight: 800, whiteSpace: 'nowrap' }}>{done ? `${done}/${total}` : 'Start'}</span>
       </span>
     </button>
   );
@@ -325,8 +325,8 @@ export function ProgramsRow() {
   return (
     <>
       <div style={{ marginTop: 24 }}>
-        <h2 className="h2" style={{ fontSize: 17 }}>Programs</h2>
-        <p className="muted" style={{ margin: '4px 0 0', fontSize: 13, fontWeight: 600 }}>Short daily series with a clear goal. Day 1 is always free.</p>
+        <h2 className="h2" style={{ fontSize: '1.0625rem' }}>Programs</h2>
+        <p className="muted" style={{ margin: '4px 0 0', fontSize: '0.8125rem', fontWeight: 600 }}>Short daily series with a clear goal. Day 1 is always free.</p>
       </div>
       <div className="hscroll">
         {sorted.map((p) => <ProgramCard key={p.id} p={p} done={(s.programs || {})[p.id] || 0} />)}
@@ -345,7 +345,6 @@ export function dailyPlan(s) {
   if (feel === 'Stressed') return { kind: 'practice', id: h < 12 ? 'stop' : 'ground', reason: 'You said you felt stressed today. Let’s bring you back to the room.' };
   if (feel === 'Tired') return { kind: 'practice', id: 'body', reason: 'You said you felt tired. A slow body scan, no effort needed.' };
   if (last.some((e) => e.mood === 'Restless')) return { kind: 'practice', id: 'ground', reason: 'You felt restless after your last session. Grounding helps with that.' };
-  if (last.some((e) => e.mood === 'Restless')) return { kind: 'session', id: 'calm5', reason: 'You felt restless recently. Five minutes to come back to yourself.' };
   const active = PROGRAMS.find((p) => { const d = (s.programs || {})[p.id] || 0; return d > 0 && d < p.days.length; });
   if (active) { const d = s.programs[active.id]; return { kind: 'program', id: active.id, title: `Day ${d + 1} · ${active.days[d].title}`, reason: `Next step in ${active.title}.` }; }
   if (h >= 20 || h < 5) return { kind: 'story', id: STORIES[0].id, reason: 'It’s late. A slow story to help you drift off.' };
@@ -363,9 +362,9 @@ export function PlanCard() {
     <button className="raised press row" onClick={go} style={{ marginTop: 16, width: '100%', border: 0, borderRadius: 26, padding: '14px 14px', gap: 12, textAlign: 'left', cursor: 'pointer', color: 'var(--ink)' }}>
       <span className="pressed" style={{ width: 52, height: 52, borderRadius: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent)', flexShrink: 0 }}><Icon name={plan.kind === 'program' ? 'layers' : plan.kind === 'story' ? 'book' : plan.kind === 'practice' ? 'leaf' : 'sparkle'} size={22} /></span>
       <span className="col grow" style={{ gap: 3, minWidth: 0 }}>
-        <span className="muted" style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.06em', textTransform: 'uppercase' }}>Mo’s plan for today</span>
-        <span style={{ fontWeight: 800, fontSize: 16, lineHeight: 1.25 }}>{title}</span>
-        <span className="muted" style={{ fontSize: 13, lineHeight: 1.35 }}>{plan.reason}</span>
+        <span className="muted" style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '.06em', textTransform: 'uppercase' }}>Mo’s plan for today</span>
+        <span style={{ fontWeight: 800, fontSize: '1rem', lineHeight: 1.25 }}>{title}</span>
+        <span className="muted" style={{ fontSize: '0.8125rem', lineHeight: 1.35 }}>{plan.reason}</span>
       </span>
       <span style={{ width: 44, height: 44, borderRadius: '50%', background: 'var(--primary)', color: 'var(--onp)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name="play" size={15} /></span>
     </button>

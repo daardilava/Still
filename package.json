@@ -5,8 +5,8 @@
   "description": "Clickable MVP prototype of the Still meditation app (web, mirrors the Expo screens).",
   "scripts": {
     "start": "serve public -l 8080",
-    "build": "esbuild src/main.jsx --bundle --minify --format=iife --jsx=automatic --define:process.env.NODE_ENV='\"production\"' --outfile=public/app.js",
-    "dev": "esbuild src/main.jsx --bundle --format=iife --jsx=automatic --outfile=public/app.js --servedir=public --serve=8080"
+    "build": "esbuild src/main.jsx --bundle --minify --format=iife --jsx=automatic --define:process.env.NODE_ENV='\"production\"' --external:fonts/* --outfile=public/app.js",
+    "dev": "esbuild src/main.jsx --bundle --format=iife --jsx=automatic --external:fonts/* --outfile=public/app.js --servedir=public --serve=8080"
   },
   "devDependencies": {
     "esbuild": "^0.25.0",

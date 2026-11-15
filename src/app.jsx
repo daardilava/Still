@@ -9,6 +9,7 @@ import { Program, Story } from './screens/programs.jsx';
 import { Insights } from './screens/insights.jsx';
 import { Journey, Breathe } from './screens/journey.jsx';
 import { Compose } from './screens/compose.jsx';
+import { Consent } from './screens/privacy.jsx';
 import { Practice } from './screens/practices.jsx';
 import { Progress } from './screens/progress.jsx';
 import { TimerScreen } from './screens/tabs.jsx';
@@ -29,7 +30,7 @@ const INITIAL = {
   saved: [], downloads: [], recent: [], moodLog: [], resume: null,
   streak: 0, lastDone: null, restWeek: null, monthMin: 0, sessionsDone: 0, week: [0, 0, 0, 0, 0, 0, 0],
   askedReview: false, lastCompletion: 0, lastResult: null,
-  programs: {}, mixes: [], windDown: false,
+  programs: {}, mixes: [], windDown: false, textSize: 'default', v: 2, consent: null,
   aiSessions: [], aiUses: [], aiChapters: {}, letters: {}, moVoice: true, aiSim: false,
   quietOn: false, quietReady: false, quietAsked: false, quietFavs: true,
   kindness: 0,
@@ -70,6 +71,7 @@ const SCREENS = {
   insights: { C: Insights },
   journey: { C: Journey },
   compose: { C: Compose },
+  consent: { C: Consent },
   practice: { C: Practice, anim: 'modal' },
   progress: { C: Progress },
   timer: { C: TimerScreen },
@@ -78,13 +80,33 @@ const SCREENS = {
 };
 export const SCREEN_NAMES = Object.keys(SCREENS);
 
+/* Saved data is checked against the shape the app expects, so old or damaged data can't crash it. */
+export const STATE_VERSION = 2;
+export function sanitize(p) {
+  if (!p || typeof p !== 'object' || Array.isArray(p)) return INITIAL;
+  const out = { ...INITIAL };
+  for (const k of Object.keys(p)) {
+    const want = INITIAL[k], got = p[k];
+    if (!(k in INITIAL)) { out[k] = got; continue; }
+    if (Array.isArray(want)) out[k] = Array.isArray(got) ? got : want;
+    else if (want && typeof want === 'object') out[k] = got && typeof got === 'object' && !Array.isArray(got) ? { ...want, ...got } : want;
+    else if (want === null) out[k] = got;
+    else out[k] = typeof got === typeof want ? got : want;
+  }
+  if (!Array.isArray(out.week) || out.week.length !== 7) out.week = INITIAL.week;
+  out.v = STATE_VERSION;
+  return out;
+}
 function load() {
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) return { ...INITIAL, ...JSON.parse(raw) };
-  } catch (e) { /* storage unavailable */ }
+    if (raw) return sanitize(JSON.parse(raw));
+  } catch (e) { /* storage unavailable or unreadable */ }
   return INITIAL;
 }
+
+const FOCUSABLE = 'button:not([disabled]),a[href],input:not([disabled]),textarea:not([disabled]),select:not([disabled]),summary,[tabindex]:not([tabindex="-1"])';
+const visibleFocusables = (root) => [...root.querySelectorAll(FOCUSABLE)].filter((e) => e.offsetWidth || e.offsetHeight || e.getClientRects().length);
 
 let uid = 1;
 
@@ -111,6 +133,29 @@ export function App() {
   useEffect(() => {
     try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) { /* ignore */ }
   }, [s]);
+
+  /* Text size: follows the browser/OS default and the in-app setting (like Dynamic Type). */
+  useEffect(() => {
+    document.documentElement.style.fontSize = { large: '112.5%', larger: '125%', largest: '137.5%' }[s.textSize] || '';
+  }, [s.textSize]);
+
+  /* Keep keyboard focus inside the topmost pop-up (dialog, then sheet). */
+  useEffect(() => {
+    const onTab = (e) => {
+      if (e.key !== 'Tab') return;
+      const ph = document.querySelector('.phone');
+      const layer = ph && (ph.querySelector('.dialog') || [...ph.querySelectorAll('.sheet')].pop());
+      if (!layer) return;
+      const f = visibleFocusables(layer);
+      if (!f.length) { e.preventDefault(); layer.focus(); return; }
+      const first = f[0], last = f[f.length - 1], a = document.activeElement;
+      if (!layer.contains(a)) { e.preventDefault(); (e.shiftKey ? last : first).focus(); }
+      else if (e.shiftKey && a === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
+    };
+    document.addEventListener('keydown', onTab);
+    return () => document.removeEventListener('keydown', onTab);
+  }, []);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -158,16 +203,48 @@ export function App() {
     setStack([{ id: uid++, name: 'splash', params: {} }]);
   }, []);
 
+  const openerRef = useRef(null);
+  const remember = () => { const a = document.activeElement; if (a && a !== document.body && !a.closest('.sheet,.dialog')) openerRef.current = a; };
   const ctx = {
     s, set, nav, platform, dark, deviceDark, toast, haptic, resetAll,
     speed: s.fast ? 20 : 1,
-    sheet: (el) => setSheetEl(el), closeSheet: () => setSheetEl(null),
-    dialog: (cfg) => setDialogCfg(cfg), closeDialog: () => setDialogCfg(null)
+    sheet: (el) => { remember(); setSheetEl(el); }, closeSheet: () => setSheetEl(null),
+    dialog: (cfg) => { remember(); setDialogCfg(cfg); }, closeDialog: () => setDialogCfg(null)
   };
+  /* When the last pop-up closes, put focus back on the button that opened it. */
+  const layerOpen = !!(sheetEl || dialogCfg);
+  const wasOpen = useRef(false);
+  useEffect(() => {
+    if (wasOpen.current && !layerOpen) {
+      const o = openerRef.current;
+      requestAnimationFrame(() => { if (o && o.isConnected) o.focus({ preventScroll: true }); openerRef.current = null; });
+    }
+    wasOpen.current = layerOpen;
+  }, [layerOpen]);
 
   registerCustom(s.aiSessions);
   const top = stack[stack.length - 1];
   const def = SCREENS[top.name] || SCREENS.tabs;
+
+  /* New screen: move focus to its heading so screen readers announce it, and name the page after it. */
+  const firstScreen = useRef(true);
+  useEffect(() => {
+    const id = top.id;
+    const t = setTimeout(() => {
+      const host = document.querySelector(`[data-sid="${id}"]`);
+      if (!host) return;
+      const h = host.querySelector('h1') || host.querySelector('h2');
+      const name = h ? h.textContent.trim() : '';
+      document.title = name ? `${name} · Still` : 'Still';
+      if (firstScreen.current) { firstScreen.current = false; return; }
+      const a = document.activeElement;
+      if (a && a.closest && a.closest('.sheet,.dialog')) return;
+      const target = h || host;
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+      target.focus({ preventScroll: true });
+    }, 60);
+    return () => clearTimeout(t);
+  }, [top.id]);
 
   /* Quiet mode: while practising, banners are held (system DND / Focus) and Still's own reminders are never sent. */
   const practising = QUIET_SCREENS.includes(top.name);
@@ -200,7 +277,7 @@ export function App() {
       <WearCtx.Provider value={s.moWear || null}>
       <div className={'stage ' + (dark ? 'theme-dark' : 'theme-light')}>
         <div className={'phone ' + platform + ' ' + (dark ? 'theme-dark' : 'theme-light')} data-screen={top.name}>
-          <div key={top.id} className={anim} style={{ position: 'absolute', inset: 0 }}>
+          <div key={top.id} data-sid={top.id} className={anim} style={{ position: 'absolute', inset: 0 }}>
             {def.own ? <C {...top.params} /> : <div className="screen"><C {...top.params} /></div>}
           </div>
 

@@ -34,7 +34,7 @@ function Preview({ pattern }) {
   return (
     <div className="pressed col" style={{ alignItems: 'center', borderRadius: 26, padding: '10px 0 12px', marginTop: 16 }}>
       <Mo size={110} mood="breathe" breath={step[2]} breathMs={step[1]} glow={false} />
-      <span className="accent" aria-hidden="true" style={{ fontWeight: 800, fontSize: 16 }}>{step[0]} · {Math.round(step[1] / 1000)}s</span>
+      <span className="accent" aria-hidden="true" style={{ fontWeight: 800, fontSize: '1rem' }}>{step[0]} · {Math.round(step[1] / 1000)}s</span>
     </div>
   );
 }
@@ -52,10 +52,10 @@ export function PaceSheet() {
       <button type="button" role="radio" aria-checked={on} onClick={() => setPace(id)} className="press"
         style={{ border: 0, borderRadius: 20, padding: '12px 14px', textAlign: 'left', cursor: 'pointer', background: 'var(--base)', boxShadow: on ? 'var(--down)' : 'var(--up-sm)', color: 'var(--ink)', display: 'flex', flexDirection: 'column', gap: 2 }}>
         <span className="row" style={{ justifyContent: 'space-between' }}>
-          <span style={{ fontWeight: 800, fontSize: 15, color: on ? 'var(--accent)' : 'var(--ink)' }}>{name}</span>
-          {id !== 'calm' && !s.user.plus ? <span className="tag plus" style={{ fontSize: 11 }}>Plus</span> : <span className="tnum muted" style={{ fontWeight: 800, fontSize: 13 }}>{steps}</span>}
+          <span style={{ fontWeight: 800, fontSize: '0.9375rem', color: on ? 'var(--accent)' : 'var(--ink)' }}>{name}</span>
+          {id !== 'calm' && !s.user.plus ? <span className="tag plus" style={{ fontSize: '0.6875rem' }}>Plus</span> : <span className="tnum muted" style={{ fontWeight: 800, fontSize: '0.8125rem' }}>{steps}</span>}
         </span>
-        <span className="muted" style={{ fontSize: 12, lineHeight: 1.35 }}>{note}</span>
+        <span className="muted" style={{ fontSize: '0.75rem', lineHeight: 1.35 }}>{note}</span>
       </button>
     );
   };
@@ -75,7 +75,7 @@ export function PaceSheet() {
           <Stepper label="Breathe out" value={custom.out} min={2} max={10} onChange={(v) => setCustom({ ...custom, out: v })} />
         </div>
       ) : null}
-      {needsPlus ? <p className="muted" style={{ margin: '14px 4px 0', fontSize: 13, lineHeight: 1.4 }}>Try the preview for free. Calm is always included.</p> : null}
+      {needsPlus ? <p className="muted" style={{ margin: '14px 4px 0', fontSize: '0.8125rem', lineHeight: 1.4 }}>Try the preview for free. Calm is always included.</p> : null}
       <button className="btn btn-primary press" style={{ marginTop: 12 }} onClick={() => {
         if (needsPlus) { closeSheet(); nav.push('paywall', { source: 'pace' }); return; }
         set({ pace, customPace: custom }); closeSheet(); toast('Mo will follow this rhythm.');
@@ -98,13 +98,13 @@ export function TranscriptPanel({ elapsed, total, title, onClose, lines }) {
       <div className="sheet" role="dialog" aria-modal="true" aria-label="Transcript" style={{ maxHeight: '72%' }}>
         <div className="grabber" />
         <div className="row" style={{ justifyContent: 'space-between', marginTop: 12 }}>
-          <div><h2 className="h2" style={{ fontSize: 22 }}>Transcript</h2><p className="muted" style={{ margin: '4px 0 0', fontSize: 14 }}>{title}</p></div>
+          <div><h2 className="h2" style={{ fontSize: '1.375rem' }}>Transcript</h2><p className="muted" style={{ margin: '4px 0 0', fontSize: '0.875rem' }}>{title}</p></div>
           <button className="icon-btn press" aria-label="Close" onClick={onClose}><Icon name="close" size={14} sw={2.6} /></button>
         </div>
         <ol className="pressed" style={{ listStyle: 'none', margin: '16px 0 0', padding: '8px 16px', borderRadius: 24 }}>
           {SCRIPT_.map((line, i) => (
             <li key={i} id={'tl-' + i} aria-current={i === current ? 'true' : undefined}
-              style={{ padding: '10px 0', fontSize: 16, lineHeight: 1.5, fontWeight: i === current ? 800 : 500, color: i === current ? 'var(--accent)' : i < current ? 'var(--muted)' : 'var(--body)', borderTop: i ? '1px solid var(--line)' : 0, transition: 'color .3s' }}>
+              style={{ padding: '10px 0', fontSize: '1rem', lineHeight: 1.5, fontWeight: i === current ? 800 : 500, color: i === current ? 'var(--accent)' : i < current ? 'var(--muted)' : 'var(--body)', borderTop: i ? '1px solid var(--line)' : 0, transition: 'color .3s' }}>
               {line}
             </li>
           ))}
@@ -127,22 +127,22 @@ export function WidgetSheet() {
         <div className="row" style={{ gap: 16, width: '100%' }}>
           <div className="raised col" style={{ width: 146, height: 146, borderRadius: 26, alignItems: 'center', justifyContent: 'center', flexShrink: 0 }} role="img" aria-label={`Small widget: Mo with a ${s.streak}-day streak`}>
             <Mo size={78} mood={s.streak >= 7 ? 'happy' : 'calm'} glow={false} />
-            <span className="tnum accent" style={{ fontWeight: 800, fontSize: 17 }}>{s.streak} {s.streak === 1 ? 'day' : 'days'}</span>
+            <span className="tnum accent" style={{ fontWeight: 800, fontSize: '1.0625rem' }}>{s.streak} {s.streak === 1 ? 'day' : 'days'}</span>
           </div>
-          <p className="muted" style={{ fontSize: 13, lineHeight: 1.45, margin: 0 }}>Small: Mo and your streak. Mo glows brighter as it grows.</p>
+          <p className="muted" style={{ fontSize: '0.8125rem', lineHeight: 1.45, margin: 0 }}>Small: Mo and your streak. Mo glows brighter as it grows.</p>
         </div>
         <div className="raised row" style={{ width: '100%', height: 146, borderRadius: 26, padding: '0 16px', gap: 12 }} role="img" aria-label={`Medium widget: tonight’s session ${tonight.title}, 12 minutes, with a play button`}>
           <Mo size={84} mood="calm" glow={false} />
           <span className="col grow" style={{ gap: 2 }}>
-            <span className="muted" style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.06em', textTransform: 'uppercase' }}>Tonight</span>
-            <span style={{ fontWeight: 800, fontSize: 15, lineHeight: 1.25 }}>{tonight.title}</span>
-            <span className="muted" style={{ fontSize: 12, fontWeight: 600 }}>12 min · Day {s.streak + 1}</span>
+            <span className="muted" style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '.06em', textTransform: 'uppercase' }}>Tonight</span>
+            <span style={{ fontWeight: 800, fontSize: '0.9375rem', lineHeight: 1.25 }}>{tonight.title}</span>
+            <span className="muted" style={{ fontSize: '0.75rem', fontWeight: 600 }}>12 min · Day {s.streak + 1}</span>
           </span>
           <span style={{ width: 44, height: 44, borderRadius: '50%', background: 'var(--primary)', color: 'var(--onp)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name="play" size={15} /></span>
         </div>
       </div>
-      <h3 style={{ margin: '18px 0 8px', fontSize: 15, fontWeight: 800 }}>How to add it</h3>
-      <ol style={{ margin: 0, paddingLeft: 20, fontSize: 14, lineHeight: 1.6, color: 'var(--body)' }}>
+      <h3 style={{ margin: '18px 0 8px', fontSize: '0.9375rem', fontWeight: 800 }}>How to add it</h3>
+      <ol style={{ margin: 0, paddingLeft: 20, fontSize: '0.875rem', lineHeight: 1.6, color: 'var(--body)' }}>
         {(ios
           ? ['Touch and hold an empty spot on your Home Screen.', 'Tap Edit, then Add Widget.', 'Search for Still and pick a size.']
           : ['Touch and hold an empty spot on your home screen.', 'Tap Widgets.', 'Find Still, then drag a widget into place.']

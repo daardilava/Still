@@ -16,7 +16,7 @@ export function TopBar({ title, right, onBack, back = true }) {
         </button>
       ) : null}
       {title ? (
-        <h1 style={{ flex: 1, margin: 0, fontSize: ios ? 18 : 22, fontWeight: 800, textAlign: ios ? 'center' : 'left' }}>{title}</h1>
+        <h1 style={{ flex: 1, margin: 0, fontSize: ios ? '1.125rem' : '1.375rem', fontWeight: 800, textAlign: ios ? 'center' : 'left' }}>{title}</h1>
       ) : <span className="grow" />}
       {right || (ios && title && back ? <span style={{ width: 48, flexShrink: 0 }} /> : null)}
     </div>
@@ -130,8 +130,8 @@ export function SheetTitle({ title, sub }) {
   return (
     <div className="row" style={{ justifyContent: 'space-between', alignItems: 'flex-start', marginTop: 12 }}>
       <div>
-        <h2 className="h2" style={{ fontSize: 22 }}>{title}</h2>
-        {sub ? <p className="muted" style={{ margin: '4px 0 0', fontSize: 14 }}>{sub}</p> : null}
+        <h2 className="h2" style={{ fontSize: '1.375rem' }}>{title}</h2>
+        {sub ? <p className="muted" style={{ margin: '4px 0 0', fontSize: '0.875rem' }}>{sub}</p> : null}
       </div>
       <button className="icon-btn press" aria-label="Close" onClick={closeSheet}><Icon name="close" size={14} sw={2.6} /></button>
     </div>
@@ -150,7 +150,7 @@ export function OptionList({ options, value, onChange, label }) {
         const on = v === value;
         return (
           <button key={String(v)} type="button" role="radio" aria-checked={on} onClick={() => onChange(v)} className="press"
-            style={{ minHeight: 50, padding: '0 16px', borderRadius: 20, border: 0, display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', fontSize: 16,
+            style={{ minHeight: 50, padding: '0 16px', borderRadius: 20, border: 0, display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', fontSize: '1rem',
               fontWeight: on ? 800 : 600, color: on ? 'var(--accent)' : 'var(--ink)', background: 'var(--base)', boxShadow: on ? 'var(--up-sm)' : 'none' }}>
             {!ios ? (
               <span style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid ' + (on ? 'var(--accent)' : 'var(--muted)'), display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -177,8 +177,8 @@ export function Slider({ label, value, onChange, min = 0, max = 100, step = 1, f
   return (
     <div className="col" style={{ gap: 6 }}>
       <div className="row" style={{ justifyContent: 'space-between' }}>
-        <label htmlFor={id} style={{ fontSize: 15, fontWeight: 800 }}>{label}</label>
-        <span className="tnum muted" style={{ fontSize: 13, fontWeight: 800 }}>{format ? format(value) : value}</span>
+        <label htmlFor={id} style={{ fontSize: '0.9375rem', fontWeight: 800 }}>{label}</label>
+        <span className="tnum muted" style={{ fontSize: '0.8125rem', fontWeight: 800 }}>{format ? format(value) : value}</span>
       </div>
       <input id={id} className="nslider" type="range" min={min} max={max} step={step} value={value}
         aria-valuetext={format ? format(value) : String(value)} onChange={(e) => onChange(Number(e.target.value))} style={{ '--fill': pct + '%' }} />
@@ -190,7 +190,7 @@ export function Slider({ label, value, onChange, min = 0, max = 100, step = 1, f
 export function Stepper({ label, value, onChange, min = 1, max = 10, unit = 's' }) {
   return (
     <div className="row" style={{ justifyContent: 'space-between', gap: 10 }}>
-      <span style={{ fontSize: 15, fontWeight: 800 }}>{label}</span>
+      <span style={{ fontSize: '0.9375rem', fontWeight: 800 }}>{label}</span>
       <div className="row" style={{ gap: 8 }} role="group" aria-label={label}>
         <button type="button" className="icon-btn press" style={{ width: 48, height: 48 }} aria-label={`Less ${label.toLowerCase()}`} disabled={value <= min} onClick={() => onChange(Math.max(min, value - 1))}><Icon name="minus" size={16} sw={2.4} /></button>
         <span className="pressed-sm tnum" aria-live="polite" style={{ minWidth: 56, height: 40, borderRadius: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: 'var(--accent)' }}>{value}{unit}</span>

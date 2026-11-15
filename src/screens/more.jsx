@@ -15,7 +15,7 @@ export function MoreSheet({ title = 'More', items }) {
             aria-disabled={it.disabled || undefined} style={it.disabled ? { opacity: 0.45 } : undefined}
             onClick={() => { if (!it.keep) closeSheet(); it.onClick(); }}>
             <Icon name={it.icon} size={20} />{it.label}
-            {it.value ? <span className="muted" style={{ fontSize: 11, fontWeight: 700 }}>{it.value}</span> : null}
+            {it.value ? <span className="muted" style={{ fontSize: '0.6875rem', fontWeight: 700 }}>{it.value}</span> : null}
           </button>
         ))}
       </div>

@@ -22,7 +22,7 @@ export function Splash() {
   return (
     <div className="pad" style={{ alignItems: 'center', justifyContent: 'center' }} aria-busy="true">
       <Mo mood="calm" size={170} enter />
-      <p style={{ margin: '22px 0 0', fontSize: 34, fontWeight: 800, letterSpacing: '-0.03em' }}>Still</p>
+      <p style={{ margin: '22px 0 0', fontSize: '2.125rem', fontWeight: 800, letterSpacing: '-0.03em' }}>Still</p>
       <p className="muted" style={{ margin: '6px 0 0', fontWeight: 600 }}>Finding a quiet minute…</p>
     </div>
   );
@@ -37,16 +37,16 @@ export function Welcome() {
         <span className="raised-sm" style={{ width: 44, height: 44, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Mo size={34} glow={false} mood="calm" />
         </span>
-        <span style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.02em' }}>Still</span>
+        <span style={{ fontSize: '1.375rem', fontWeight: 800, letterSpacing: '-0.02em' }}>Still</span>
       </div>
       <div style={{ position: 'relative', alignSelf: 'center', marginTop: 46 }}>
         <MoDisc size={280} mood="hello" enter />
-        <div className="raised" style={{ position: 'absolute', left: -14, top: -30, maxWidth: 200, padding: '12px 16px', borderRadius: '20px 20px 20px 6px', fontSize: 15, fontWeight: 700, lineHeight: 1.3 }}>
+        <div className="raised" style={{ position: 'absolute', left: -14, top: -30, maxWidth: 200, padding: '12px 16px', borderRadius: '20px 20px 20px 6px', fontSize: '0.9375rem', fontWeight: 700, lineHeight: 1.3 }}>
           Hi, I’m Mo. Let’s find a quiet minute.
         </div>
       </div>
-      <h1 className="h1" style={{ marginTop: 40, fontSize: 32 }}>Breathe in. Slow down. Begin again.</h1>
-      <p className="lead" style={{ fontSize: 16 }}>Guided sessions for sleep, focus and stress relief — a few quiet minutes a day.</p>
+      <h1 className="h1" style={{ marginTop: 40, fontSize: '2rem' }}>Breathe in. Slow down. Begin again.</h1>
+      <p className="lead" style={{ fontSize: '1rem' }}>Guided sessions for sleep, focus and stress relief — a few quiet minutes a day.</p>
       <div className="grow" style={{ minHeight: 20 }} />
       <button className="btn btn-primary press" onClick={() => nav.push('goals')}>Start your journey</button>
       <button className="btn-text" style={{ marginTop: 8, color: 'var(--muted)', fontWeight: 500 }} onClick={() => nav.push('signin')}>
@@ -83,16 +83,16 @@ export function Goals() {
               <span style={{ width: 38, height: 38, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', background: on ? 'var(--primary)' : 'var(--base)', color: on ? 'var(--onp)' : 'var(--accent)', boxShadow: on ? 'none' : 'var(--down-sm)' }}>
                 <Icon name={icon} size={20} />
               </span>
-              <span style={{ fontSize: 15, fontWeight: on ? 800 : 700, color: on ? 'var(--accent)' : 'var(--ink)', lineHeight: 1.2 }}>{g}</span>
+              <span style={{ fontSize: '0.9375rem', fontWeight: on ? 800 : 700, color: on ? 'var(--accent)' : 'var(--ink)', lineHeight: 1.2 }}>{g}</span>
               {on ? <span style={{ position: 'absolute', top: 12, right: 12, width: 22, height: 22, borderRadius: '50%', background: 'var(--primary)', color: 'var(--onp)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="check" size={12} sw={3} /></span> : null}
             </button>
           );
         })}
       </div>
-      <p style={{ margin: '22px 0 12px', fontSize: 14, fontWeight: 700 }}>How familiar are you with meditation?</p>
+      <p style={{ margin: '22px 0 12px', fontSize: '0.875rem', fontWeight: 700 }}>How familiar are you with meditation?</p>
       <Segment label="Experience" options={['New', 'Some', 'Regular']} value={s.level} onChange={(v) => set({ level: v })} />
       <div className="grow" style={{ minHeight: 20 }} />
-      <button className="btn btn-primary press" disabled={!picked.length} onClick={() => nav.push('firstIntro')}>{picked.length ? 'Continue' : 'Pick at least one'}</button>
+      <button className="btn btn-primary press" disabled={!picked.length} onClick={() => nav.push('consent')}>{picked.length ? 'Continue' : 'Pick at least one'}</button>
     </div>
   );
 }
@@ -112,7 +112,7 @@ export function FirstIntro() {
       <p className="lead">No experience needed. Breathe in as Mo grows, and out as Mo settles.</p>
       <div className="col" style={{ gap: 12, marginTop: 18 }}>
         {tips.map(([i, t]) => (
-          <div key={t} className="row" style={{ gap: 12, fontSize: 15, fontWeight: 700 }}>
+          <div key={t} className="row" style={{ gap: 12, fontSize: '0.9375rem', fontWeight: 700 }}>
             <span className="pressed-sm" style={{ width: 34, height: 34, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent)', flexShrink: 0 }}><Icon name={i} size={18} /></span>{t}
           </div>
         ))}
@@ -135,7 +135,7 @@ export function Account() {
     setBusy(null);
     nav.push('reminder', { mode: 'onboarding' });
   };
-  const base = { height: 56, borderRadius: 28, fontSize: 16, width: '100%', boxShadow: 'var(--up-sm)' };
+  const base = { height: 56, borderRadius: 28, fontSize: '1rem', width: '100%', boxShadow: 'var(--up-sm)' };
   const apple = <button key="a" className="btn press" style={{ ...base, background: dark ? '#fff' : '#000', color: dark ? '#000' : '#fff' }} onClick={() => provider('Apple')} disabled={!!busy}>{busy === 'Apple' ? <Spinner /> : 'Continue with Apple'}</button>;
   const google = <button key="g" className="btn press" style={{ ...base, background: 'var(--base)', color: 'var(--ink)' }} onClick={() => provider('Google')} disabled={!!busy}>{busy === 'Google' ? <Spinner /> : 'Continue with Google'}</button>;
   const email = <button key="e" className="btn press" style={{ ...base, background: 'var(--base)', color: 'var(--accent)' }} onClick={() => nav.push('signup')} disabled={!!busy}><Icon name="mail" />Continue with email</button>;
@@ -151,15 +151,15 @@ export function Account() {
           <div style={{ position: 'absolute', right: 18, bottom: 4 }}><Mo size={110} mood="calm" glow={false} /></div>
         </div>
       </div>
-      <h1 className="h1" style={{ marginTop: 24, fontSize: 28 }}>Keep your progress safe</h1>
+      <h1 className="h1" style={{ marginTop: 24, fontSize: '1.75rem' }}>Keep your progress safe</h1>
       <p className="lead">Create a free account so Mo can remember your streak and favourites on every device.</p>
       <div className="col" style={{ gap: 14, marginTop: 20 }}>{platform === 'ios' ? [apple, google, email] : [google, email]}</div>
       <div className="grow" style={{ minHeight: 12 }} />
       <button className="btn-text" onClick={() => nav.push('reminder', { mode: 'onboarding' })}>Skip for now</button>
-      <p className="muted" style={{ textAlign: 'center', fontSize: 12, lineHeight: 1.5, margin: '2px 0 0' }}>By continuing you agree to our terms and privacy policy.</p>
+      <p className="muted" style={{ textAlign: 'center', fontSize: '0.75rem', lineHeight: 1.5, margin: '2px 0 0' }}>By continuing you agree to our terms and privacy policy.</p>
       <div className="row" style={{ justifyContent: 'center', gap: 4 }}>
-        <button className="btn-text" style={{ fontSize: 13 }} onClick={() => nav.push('legal', { doc: 'terms' })}>Terms</button>
-        <button className="btn-text" style={{ fontSize: 13 }} onClick={() => nav.push('legal', { doc: 'privacy' })}>Privacy Policy</button>
+        <button className="btn-text" style={{ fontSize: '0.8125rem' }} onClick={() => nav.push('legal', { doc: 'terms' })}>Terms</button>
+        <button className="btn-text" style={{ fontSize: '0.8125rem' }} onClick={() => nav.push('legal', { doc: 'privacy' })}>Privacy Policy</button>
       </div>
     </div>
   );
@@ -222,7 +222,7 @@ export function SignIn() {
     <form className="pad" onSubmit={submit} noValidate>
       <TopBar title="Sign in" />
       <div style={{ alignSelf: 'center', marginTop: 20 }}><Mo size={120} mood="hello" /></div>
-      <h1 className="h1" style={{ textAlign: 'center', fontSize: 26, marginTop: 10 }}>Welcome back</h1>
+      <h1 className="h1" style={{ textAlign: 'center', fontSize: '1.625rem', marginTop: 10 }}>Welcome back</h1>
       <Field label="Email" type="email" value={email} onChange={setEmail} autoComplete="email" inputMode="email" placeholder="you@example.com" />
       <Field label="Password" type="password" value={pw} onChange={setPw} autoComplete="current-password" error={err} />
       <button type="button" className="btn-text" style={{ alignSelf: 'flex-end', marginTop: 4 }} onClick={() => nav.push('forgot')}>Forgot password?</button>
@@ -246,7 +246,7 @@ export function Forgot() {
       {sent ? (
         <div className="col grow" style={{ alignItems: 'center', textAlign: 'center', justifyContent: 'center' }}>
           <MoDisc size={220} mood="wink" />
-          <h1 className="h1" style={{ marginTop: 28, fontSize: 26 }}>Check your inbox</h1>
+          <h1 className="h1" style={{ marginTop: 28, fontSize: '1.625rem' }}>Check your inbox</h1>
           <p className="lead">If an account exists for {email}, you’ll get a link to reset your password in a minute or two.</p>
           <div className="grow" />
           <button className="btn btn-primary press" onClick={nav.back}>Back to sign in</button>
@@ -308,20 +308,20 @@ export function Reminder({ mode = 'onboarding' }) {
           return (
             <button key={l} type="button" role="radio" aria-checked={on} onClick={() => setSlot(l)} className="press"
               style={{ height: 80, borderRadius: 22, border: 0, background: 'var(--base)', boxShadow: on ? 'var(--down)' : 'var(--up)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2, cursor: 'pointer' }}>
-              <span className="muted" style={{ fontSize: 13, fontWeight: 700 }}>{l}</span>
-              <span className="tnum" style={{ fontSize: 22, fontWeight: 800, color: on ? 'var(--accent)' : 'var(--ink)' }}>{t}</span>
+              <span className="muted" style={{ fontSize: '0.8125rem', fontWeight: 700 }}>{l}</span>
+              <span className="tnum" style={{ fontSize: '1.375rem', fontWeight: 800, color: on ? 'var(--accent)' : 'var(--ink)' }}>{t}</span>
             </button>
           );
         })}
       </div>
-      <p style={{ margin: '22px 0 12px', fontSize: 14, fontWeight: 700 }}>On these days</p>
+      <p style={{ margin: '22px 0 12px', fontSize: '0.875rem', fontWeight: 700 }}>On these days</p>
       <div className="row" style={{ justifyContent: 'space-between' }}>
         {names.map(([d, full], i) => {
           const on = days.includes(i);
           return (
             <button key={full} type="button" aria-pressed={on} aria-label={full} onClick={() => setDays(on ? days.filter((x) => x !== i) : [...days, i].sort())} className="press"
               style={{ width: 48, height: 48, padding: 0, border: 0, background: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-              <span style={{ width: 42, height: 42, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 14, background: on ? 'var(--primary)' : 'var(--base)', color: on ? 'var(--onp)' : 'var(--muted)', boxShadow: on ? 'var(--up-sm)' : 'var(--down-sm)' }}>{d}</span>
+              <span style={{ width: 42, height: 42, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.875rem', background: on ? 'var(--primary)' : 'var(--base)', color: on ? 'var(--onp)' : 'var(--muted)', boxShadow: on ? 'var(--up-sm)' : 'var(--down-sm)' }}>{d}</span>
             </button>
           );
         })}
@@ -329,13 +329,13 @@ export function Reminder({ mode = 'onboarding' }) {
       <div className="raised" style={{ marginTop: 24, padding: 14, borderRadius: 24, display: 'flex', gap: 12 }}>
         <span style={{ width: 42, height: 42, borderRadius: 11, background: '#5B32C4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden' }}><Mo size={40} glow={false} mood="calm" /></span>
         <span className="col grow" style={{ gap: 2 }}>
-          <span className="row muted" style={{ justifyContent: 'space-between', fontSize: 13 }}><b style={{ color: 'var(--ink)' }}>Still</b><span className="tnum">{time}</span></span>
-          <span style={{ fontSize: 14, fontWeight: 800 }}>Mo saved you a quiet spot</span>
-          <span style={{ fontSize: 13, color: 'var(--body)' }}>Your {slot.toLowerCase()} session is ready. 12 minutes?</span>
+          <span className="row muted" style={{ justifyContent: 'space-between', fontSize: '0.8125rem' }}><b style={{ color: 'var(--ink)' }}>Still</b><span className="tnum">{time}</span></span>
+          <span style={{ fontSize: '0.875rem', fontWeight: 800 }}>Mo saved you a quiet spot</span>
+          <span style={{ fontSize: '0.8125rem', color: 'var(--body)' }}>Your {slot.toLowerCase()} session is ready. 12 minutes?</span>
         </span>
       </div>
       <div className="grow" style={{ minHeight: 20 }} />
-      {s.reminder.permission !== 'granted' ? <p className="muted" style={{ textAlign: 'center', fontSize: 13, margin: '0 0 12px' }}>Next, {platform === 'ios' ? 'iOS' : 'Android'} will ask to allow notifications.</p> : null}
+      {s.reminder.permission !== 'granted' ? <p className="muted" style={{ textAlign: 'center', fontSize: '0.8125rem', margin: '0 0 12px' }}>Next, {platform === 'ios' ? 'iOS' : 'Android'} will ask to allow notifications.</p> : null}
       <button className="btn btn-primary press" disabled={!days.length} onClick={enable}>{onb ? 'Turn on reminders' : 'Save reminder'}</button>
       {onb ? <button className="btn-text" style={{ marginTop: 6 }} onClick={() => { set({ reminder: { ...s.reminder, on: false } }); finish(); }}>Not now</button>
         : s.reminder.on ? <button className="btn-text btn-danger" style={{ marginTop: 6 }} onClick={() => { set({ reminder: { ...s.reminder, on: false } }); toast('Reminder turned off.'); nav.back(); }}>Turn off reminder</button> : null}
@@ -345,7 +345,7 @@ export function Reminder({ mode = 'onboarding' }) {
 
 /* ---------- Paywall (Still Plus) ---------- */
 export function Paywall({ source, name }) {
-  const { s, set, nav, dialog, toast } = useApp();
+  const { s, set, nav, dialog, toast, platform } = useApp();
   const [plan, setPlan] = useState('year');
   const [busy, setBusy] = useState(false);
   const close = () => (source === 'onboarding' ? nav.reset('tabs') : nav.back());
@@ -376,8 +376,8 @@ export function Paywall({ source, name }) {
         <span style={{ width: 22, height: 22, borderRadius: '50%', border: '2px solid ' + (on ? 'var(--accent)' : 'var(--muted)'), display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <span style={{ width: 11, height: 11, borderRadius: '50%', background: on ? 'var(--accent)' : 'transparent' }} />
         </span>
-        <span className="col grow"><span style={{ fontSize: 16, fontWeight: 800 }}>{title}</span><span className="muted" style={{ fontSize: 13, fontWeight: 600 }}>{note}</span></span>
-        <span className="tnum" style={{ fontSize: 15, fontWeight: 800, color: on ? 'var(--accent)' : 'var(--ink)' }}>{price}</span>
+        <span className="col grow"><span style={{ fontSize: '1rem', fontWeight: 800 }}>{title}</span><span className="muted" style={{ fontSize: '0.8125rem', fontWeight: 600 }}>{note}</span></span>
+        <span className="tnum" style={{ fontSize: '0.9375rem', fontWeight: 800, color: on ? 'var(--accent)' : 'var(--ink)' }}>{price}</span>
         {badge ? <span className="tag plus" style={{ position: 'absolute', top: -10, right: 16 }}>{badge}</span> : null}
       </button>
     );
@@ -393,7 +393,7 @@ export function Paywall({ source, name }) {
       <p className="lead" style={{ textAlign: 'center' }}>{lead}</p>
       <div className="col" style={{ gap: 12, marginTop: 18 }}>
         {perks.map(([i, t]) => (
-          <div key={t} className="row" style={{ gap: 12, fontSize: 15, fontWeight: 700 }}>
+          <div key={t} className="row" style={{ gap: 12, fontSize: '0.9375rem', fontWeight: 700 }}>
             <span className="pressed-sm" style={{ width: 34, height: 34, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent)', flexShrink: 0 }}><Icon name={i} size={18} /></span>{t}
           </div>
         ))}
@@ -404,32 +404,32 @@ export function Paywall({ source, name }) {
       </div>
       {plan === 'year' && !s.user.plus ? (
         <div className="pressed" style={{ marginTop: 18, padding: '12px 16px', borderRadius: 22 }}>
-          <p className="muted" style={{ margin: '0 0 6px', fontSize: 12, fontWeight: 800, letterSpacing: '.06em', textTransform: 'uppercase' }}>How your free trial works</p>
+          <p className="muted" style={{ margin: '0 0 6px', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '.06em', textTransform: 'uppercase' }}>How your free trial works</p>
           {[['sparkle', 'Today', 'Full access to every session'], ['bell', 'Day 5', 'Mo reminds you the trial is ending'], ['crown', 'Day 7', 'Billing starts. Cancel before then and pay nothing.']].map(([i, d, t], k) => (
             <div key={d} className="row" style={{ gap: 12, alignItems: 'flex-start', padding: '6px 0' }}>
               <span style={{ width: 30, height: 30, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: k === 0 ? 'var(--primary)' : 'var(--base)', color: k === 0 ? 'var(--onp)' : 'var(--accent)', boxShadow: k === 0 ? 'none' : 'var(--up-sm)' }}><Icon name={i} size={15} /></span>
-              <span className="col"><span style={{ fontSize: 14, fontWeight: 800 }}>{d}</span><span className="muted" style={{ fontSize: 13, lineHeight: 1.35 }}>{t}</span></span>
+              <span className="col"><span style={{ fontSize: '0.875rem', fontWeight: 800 }}>{d}</span><span className="muted" style={{ fontSize: '0.8125rem', lineHeight: 1.35 }}>{t}</span></span>
             </div>
           ))}
         </div>
       ) : null}
       <details className="pressed freelist" style={{ marginTop: 16, padding: '0 16px', borderRadius: 22 }}>
-        <summary style={{ minHeight: 48, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 14, fontWeight: 800, cursor: 'pointer', listStyle: 'none' }}>
+        <summary style={{ minHeight: 48, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.875rem', fontWeight: 800, cursor: 'pointer', listStyle: 'none' }}>
           What stays free<span className="chev" style={{ display: "flex" }}><Icon name="down" size={16} sw={2.4} /></span>
         </summary>
         <ul style={{ margin: 0, padding: '0 0 14px', listStyle: 'none' }}>
-          {free.map((f) => <li key={f} className="row" style={{ gap: 10, padding: '5px 0', fontSize: 14, fontWeight: 600, color: 'var(--body)' }}><Icon name="check" size={15} sw={2.6} style={{ color: 'var(--accent)', flexShrink: 0 }} />{f}</li>)}
+          {free.map((f) => <li key={f} className="row" style={{ gap: 10, padding: '5px 0', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)' }}><Icon name="check" size={15} sw={2.6} style={{ color: 'var(--accent)', flexShrink: 0 }} />{f}</li>)}
         </ul>
       </details>
       <div className="grow" style={{ minHeight: 18 }} />
       <button className="btn btn-primary press" disabled={busy || s.user.plus} onClick={buy}>{busy ? <Spinner /> : s.user.plus ? 'You’re already on Plus' : plan === 'year' ? 'Start 7-day free trial' : 'Subscribe'}</button>
-      <p className="muted" style={{ fontSize: 11, lineHeight: 1.45, textAlign: 'center', margin: '10px 0 0' }}>
-        Subscription renews automatically unless cancelled at least 24 hours before the end of the period. Manage or cancel anytime in your {useApp().platform === 'ios' ? 'App Store' : 'Google Play'} account settings.
+      <p className="muted" style={{ fontSize: '0.6875rem', lineHeight: 1.45, textAlign: 'center', margin: '10px 0 0' }}>
+        Subscription renews automatically unless cancelled at least 24 hours before the end of the period. Manage or cancel anytime in your {platform === 'ios' ? 'App Store' : 'Google Play'} account settings.
       </p>
       <div className="row" style={{ justifyContent: 'center' }}>
-        <button className="btn-text" style={{ fontSize: 13 }} onClick={() => nav.push('legal', { doc: 'terms' })}>Terms</button>
-        <button className="btn-text" style={{ fontSize: 13 }} onClick={() => nav.push('legal', { doc: 'privacy' })}>Privacy</button>
-        {source === 'onboarding' ? <button className="btn-text" style={{ fontSize: 13, color: 'var(--muted)' }} onClick={close}>Not now</button> : null}
+        <button className="btn-text" style={{ fontSize: '0.8125rem' }} onClick={() => nav.push('legal', { doc: 'terms' })}>Terms</button>
+        <button className="btn-text" style={{ fontSize: '0.8125rem' }} onClick={() => nav.push('legal', { doc: 'privacy' })}>Privacy</button>
+        {source === 'onboarding' ? <button className="btn-text" style={{ fontSize: '0.8125rem', color: 'var(--muted)' }} onClick={close}>Not now</button> : null}
       </div>
     </div>
   );

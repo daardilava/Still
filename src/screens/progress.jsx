@@ -7,6 +7,7 @@ import { CollectionSheet, computeInsights } from './insights.jsx';
 import { Milestones } from './profile.jsx';
 import { MoodTrend } from './tabs.jsx';
 import { getSample, getTts, writeParas } from '../ai.js';
+import { aiOK } from './privacy.jsx';
 
 const monthKey = () => new Date().toISOString().slice(0, 7);
 const monthName = () => new Date().toLocaleString('en', { month: 'long' });
@@ -51,7 +52,7 @@ export function LetterSheet() {
     const d = letterData(s);
     const fallback = templateLetter(d);
     (async () => {
-      const sample = s.aiSim ? null : await getSample();
+      const sample = s.aiSim || !aiOK(s) ? null : await getSample();
       if (off) return;
       if (!sample) { setParas(fallback); return; }
       setWriting(true);
@@ -82,9 +83,9 @@ Write in English, warm, a little playful, never preachy. 3–4 short paragraphs 
       <SheetTitle title={`A letter from Mo`} sub={`${monthName()} ${new Date().getFullYear()}`} />
       <div className="paper" style={{ marginTop: 4, padding: '20px 20px 18px', borderRadius: 24, position: 'relative' }} aria-busy={writing}>
         <span style={{ position: 'absolute', right: 12, bottom: -24 }}><Mo size={60} mood="happy" glow={false} /></span>
-        {!shown.length ? <p className="muted row" style={{ margin: 0, gap: 8, fontSize: 15, fontWeight: 700 }}><span className="spin" aria-hidden="true" />Mo is writing to you…</p> : null}
+        {!shown.length ? <p className="muted row" style={{ margin: 0, gap: 8, fontSize: '0.9375rem', fontWeight: 700 }}><span className="spin" aria-hidden="true" />Mo is writing to you…</p> : null}
         <div className="col" style={{ gap: 12 }}>
-          {shown.map((t, k) => <p key={k} className="bubble-in" style={{ margin: 0, fontSize: 16, lineHeight: 1.6, fontWeight: 500 }}>{t}</p>)}
+          {shown.map((t, k) => <p key={k} className="bubble-in" style={{ margin: 0, fontSize: '1rem', lineHeight: 1.6, fontWeight: 500 }}>{t}</p>)}
         </div>
       </div>
       {cached || (writing && shown.length) ? <span className="tag" style={{ alignSelf: 'flex-start', marginTop: 16 }}><Icon name="sparkle" size={11} sw={2.4} />Written by Mo with AI, from your own data</span> : null}
@@ -105,22 +106,22 @@ export function Progress() {
       <button className="raised press row" onClick={() => sheet(<LetterSheet />)} style={{ marginTop: 18, width: '100%', border: 0, borderRadius: 26, padding: '12px 16px 12px 8px', gap: 10, textAlign: 'left', cursor: 'pointer', color: 'var(--ink)' }}>
         <Mo size={74} mood="wink" glow={false} />
         <span className="col grow" style={{ gap: 3, minWidth: 0 }}>
-          <span className="muted" style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.06em', textTransform: 'uppercase' }}>{monthName()}</span>
-          <span style={{ fontWeight: 800, fontSize: 17 }}>A letter from Mo</span>
-          <span className="muted" style={{ fontSize: 13, lineHeight: 1.35 }}>{(s.letters || {})[monthKey()] ? 'Read it again' : 'Mo wrote down what it noticed this month'}</span>
+          <span className="muted" style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '.06em', textTransform: 'uppercase' }}>{monthName()}</span>
+          <span style={{ fontWeight: 800, fontSize: '1.0625rem' }}>A letter from Mo</span>
+          <span className="muted" style={{ fontSize: '0.8125rem', lineHeight: 1.35 }}>{(s.letters || {})[monthKey()] ? 'Read it again' : 'Mo wrote down what it noticed this month'}</span>
         </span>
         <Icon name="mail" size={20} style={{ color: 'var(--accent)' }} />
       </button>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,minmax(0,1fr))', gap: 16, marginTop: 18 }}>
         <button className="raised press col" style={tile} onClick={() => nav.push('insights')}>
           <span className="row" style={{ gap: 8, width: '100%', justifyContent: 'space-between' }}><Icon name="target" size={22} style={{ color: 'var(--accent)' }} />{!s.user.plus ? <span className="tag plus"><Icon name="crown" size={11} sw={2.4} />Plus</span> : null}</span>
-          <span style={{ fontWeight: 800, fontSize: 15 }}>Insights</span>
-          <span className="muted" style={{ fontSize: 13, lineHeight: 1.35 }}>What works best for you</span>
+          <span style={{ fontWeight: 800, fontSize: '0.9375rem' }}>Insights</span>
+          <span className="muted" style={{ fontSize: '0.8125rem', lineHeight: 1.35 }}>What works best for you</span>
         </button>
         <button className="raised press col" style={tile} onClick={() => sheet(<CollectionSheet />)}>
           <Icon name="sparkle" size={22} style={{ color: 'var(--accent)' }} />
-          <span style={{ fontWeight: 800, fontSize: 15 }}>Mo’s collection</span>
-          <span className="muted tnum" style={{ fontSize: 13, lineHeight: 1.35 }}>{UNLOCKS.filter((u) => Math.max(s.bestStreak || 0, s.streak) >= u.days).length} of {UNLOCKS.length} unlocked</span>
+          <span style={{ fontWeight: 800, fontSize: '0.9375rem' }}>Mo’s collection</span>
+          <span className="muted tnum" style={{ fontSize: '0.8125rem', lineHeight: 1.35 }}>{UNLOCKS.filter((u) => Math.max(s.bestStreak || 0, s.streak) >= u.days).length} of {UNLOCKS.length} unlocked</span>
         </button>
       </div>
       <Milestones />

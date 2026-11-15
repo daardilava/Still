@@ -9,6 +9,7 @@ import { CheckIn } from './insights.jsx';
 import { QuietLabel, QuietNudge } from './quiet.jsx';
 import { MoreSheet } from './more.jsx';
 import { getTts } from '../ai.js';
+import { moodOK, NeedsChoice } from './privacy.jsx';
 
 /* ---------- Session detail ---------- */
 export function Session({ id }) {
@@ -44,9 +45,9 @@ export function Session({ id }) {
         {downloaded ? <span className="tag"><Icon name="download" size={11} sw={2.6} />Offline</span> : null}
         {locked ? <span className="tag plus"><Icon name="crown" size={11} sw={2.4} />Plus</span> : null}
       </div>
-      <h1 className="h1" style={{ marginTop: 12, fontSize: 28 }}>{ses.title}</h1>
-      <p className="muted" style={{ margin: '4px 0 0', fontSize: 15 }}>Guided by [GUIDE NAME]</p>
-      <p style={{ margin: '12px 0 0', fontSize: 15, lineHeight: 1.5, color: 'var(--body)' }}>{ses.desc}</p>
+      <h1 className="h1" style={{ marginTop: 12, fontSize: '1.75rem' }}>{ses.title}</h1>
+      <p className="muted" style={{ margin: '4px 0 0', fontSize: '0.9375rem' }}>Guided by [GUIDE NAME]</p>
+      <p style={{ margin: '12px 0 0', fontSize: '0.9375rem', lineHeight: 1.5, color: 'var(--body)' }}>{ses.desc}</p>
       {ses.lengths.length > 1 ? (
         <div style={{ marginTop: 18 }}>
           <Segment label="Session length" options={ses.lengths.map((m) => ({ value: m, label: m + ' min' }))} value={len} onChange={setLen} />
@@ -56,7 +57,7 @@ export function Session({ id }) {
         {dl > 0 ? <><Spinner /> Downloading {Math.round(dl * 100)}%</> : downloaded ? <><Icon name="check" sw={2.4} />Available offline</> : <><Icon name="download" />Download for offline</>}
       </button>
       <div className="grow" style={{ minHeight: 16 }} />
-      {offlineBlocked ? <p className="muted" style={{ textAlign: 'center', fontSize: 13, margin: '0 0 10px' }} role="status">You’re offline and this session isn’t downloaded.</p> : null}
+      {offlineBlocked ? <p className="muted" style={{ textAlign: 'center', fontSize: '0.8125rem', margin: '0 0 10px' }} role="status">You’re offline and this session isn’t downloaded.</p> : null}
       <button className="btn btn-primary press" disabled={offlineBlocked}
         onClick={() => (locked ? nav.push('paywall', { source: 'session' }) : nav.push('player', { id: ses.id, minutes: len }))}>
         {locked ? <><Icon name="lock" sw={2.2} />Unlock with Plus</> : <><Icon name="play" size={16} />Begin · {len} min</>}
@@ -101,7 +102,7 @@ export function Player({ id, minutes = 12, timer = false, sound = 'Silence', onb
   const total = minutes * 60;
   const [elapsed, setElapsed] = useState(Math.min(startAt, total - 1));
   /* One-tap mood check-in before guided sessions; playback waits for it. */
-  const [asking, setAsking] = useState(!onboarding && !timer && s.checkIn !== false && !startAt);
+  const [asking, setAsking] = useState(!onboarding && !timer && s.checkIn !== false && !startAt && moodOK(s));
   const [playing, setPlaying] = useState(!asking);
   const answer = (mood) => { set({ pre: mood ? { mood, t: Date.now() } : null }); setAsking(false); setPlaying(true); setPoke((p) => p + 1); };
 
@@ -216,16 +217,16 @@ export function Player({ id, minutes = 12, timer = false, sound = 'Silence', onb
         </div>
       </div>
 
-      <p aria-hidden="true" style={{ margin: '20px 0 0', fontSize: 26, fontWeight: 800, color: 'var(--accent)', minHeight: 32 }}>{playing ? cue + (timer ? '' : '…') : 'Paused'}</p>
+      <p aria-hidden="true" style={{ margin: '20px 0 0', fontSize: '1.625rem', fontWeight: 800, color: 'var(--accent)', minHeight: 32 }}>{playing ? cue + (timer ? '' : '…') : 'Paused'}</p>
       <span className="sr-only" aria-live="polite">{announce}</span>
-      <h1 style={{ margin: '6px 0 0', fontSize: 20, fontWeight: 800, textAlign: 'center' }}>{timer ? `${minutes}-minute timer · ${sound}` : ses.title}</h1>
-      <div className="row tnum" role="timer" aria-label={`${fmt(elapsed)} of ${fmt(total)}`} style={{ gap: 8, marginTop: 6, fontSize: 14, fontWeight: 800, color: 'var(--muted)' }}>
+      <h1 style={{ margin: '6px 0 0', fontSize: '1.25rem', fontWeight: 800, textAlign: 'center' }}>{timer ? `${minutes}-minute timer · ${sound}` : ses.title}</h1>
+      <div className="row tnum" role="timer" aria-label={`${fmt(elapsed)} of ${fmt(total)}`} style={{ gap: 8, marginTop: 6, fontSize: '0.875rem', fontWeight: 800, color: 'var(--muted)' }}>
         <span className="accent">{fmt(elapsed)}</span><span aria-hidden="true">/</span><span>{fmt(total)}</span>
         {sleepTimer !== 'Off' ? <span className="tag" style={{ marginLeft: 6 }}><Icon name="moon" size={11} sw={2.4} />{sleepTimer}</span> : null}
       </div>
 
       {voiceBlocked === 'no_gesture' ? (
-        <button className="chip press on" style={{ marginTop: 12, fontSize: 14, display: 'flex', alignItems: 'center', gap: 6 }} onClick={() => setVoiceBlocked(false)}><Icon name="speaker" size={15} />Hear Mo read it</button>
+        <button className="chip press on" style={{ marginTop: 12, fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: 6 }} onClick={() => setVoiceBlocked(false)}><Icon name="speaker" size={15} />Hear Mo read it</button>
       ) : lines && voiceOn && s.moVoice !== false ? <span className="tag" style={{ marginTop: 12 }}><Icon name="speaker" size={11} sw={2.4} />Mo is reading</span> : null}
 
       <div className="row ctrls" style={{ width: '100%', justifyContent: 'space-between', marginTop: 20, padding: '0 6px' }}>
@@ -362,32 +363,33 @@ export function Complete({ id, minutes = 12, timer, sound, onboarding = false, e
       </div>
       <h1 className="h1" style={{ marginTop: 20 }}>{onboarding ? 'You did it' : 'Well done'}</h1>
       <p className="lead" style={{ textAlign: 'center' }}>{ses ? ses.title : sound === 'Silence' || !sound ? 'Silent timer' : `Timer · ${sound}`} · {mins} min</p>
-      {s.healthSync ? <p className="muted" role="status" style={{ margin: '6px 0 0', fontSize: 13, fontWeight: 700 }}><Icon name="heart" size={13} sw={2.4} style={{ verticalAlign: '-2px', color: 'var(--accent)' }} /> {mins} mindful {mins === 1 ? 'minute' : 'minutes'} saved to {platform === 'ios' ? 'Apple Health' : 'Health Connect'}</p> : null}
+      {s.healthSync ? <p className="muted" role="status" style={{ margin: '6px 0 0', fontSize: '0.8125rem', fontWeight: 700 }}><Icon name="heart" size={13} sw={2.4} style={{ verticalAlign: '-2px', color: 'var(--accent)' }} /> {mins} mindful {mins === 1 ? 'minute' : 'minutes'} saved to {platform === 'ios' ? 'Apple Health' : 'Health Connect'}</p> : null}
       <div className="raised" style={{ width: '100%', marginTop: 18, padding: '14px 18px', borderRadius: 24 }}>
         <div className="row" style={{ justifyContent: 'space-between' }}>
-          <span className="tnum accent" style={{ fontSize: 26, fontWeight: 800 }}>{res.streak} {res.streak === 1 ? 'day' : 'days'}</span>
+          <span className="tnum accent" style={{ fontSize: '1.625rem', fontWeight: 800 }}>{res.streak} {res.streak === 1 ? 'day' : 'days'}</span>
           <span role="img" aria-label={`${Math.min(res.streak, 7)} of 7 days this week`} className="row" style={{ gap: 6 }}>
             {[0, 1, 2, 3, 4, 5, 6].map((i) => (
               <span key={i} style={{ width: 14, height: 14, borderRadius: '50%', ...(i < Math.min(res.streak, 7) ? { background: 'var(--primary)' } : { boxShadow: 'var(--down-sm)' }) }} />
             ))}
           </span>
         </div>
-        <p className="muted" style={{ margin: '4px 0 0', fontSize: 13, fontWeight: 600 }}>{res.note}</p>
+        <p className="muted" style={{ margin: '4px 0 0', fontSize: '0.8125rem', fontWeight: 600 }}>{res.note}</p>
       </div>
       {unlock ? (
         <div className="pressed row" role="status" style={{ width: '100%', marginTop: 14, padding: '10px 10px 10px 14px', borderRadius: 20, gap: 10 }}>
           <Icon name="sparkle" size={20} style={{ color: 'var(--accent)', flexShrink: 0 }} />
-          <span className="grow" style={{ fontSize: 13, fontWeight: 700, lineHeight: 1.4, color: 'var(--body)' }}>{unlock.days}-day streak! Mo unlocked the <b style={{ color: 'var(--ink)' }}>{unlock.name.toLowerCase()}</b>.</span>
-          {s.moWear === unlock.id ? <span className="tag">Wearing</span> : <button className="chip press on" style={{ fontSize: 13, flexShrink: 0 }} onClick={() => { set({ moWear: unlock.id }); haptic('select'); }}>Put it on</button>}
+          <span className="grow" style={{ fontSize: '0.8125rem', fontWeight: 700, lineHeight: 1.4, color: 'var(--body)' }}>{unlock.days}-day streak! Mo unlocked the <b style={{ color: 'var(--ink)' }}>{unlock.name.toLowerCase()}</b>.</span>
+          {s.moWear === unlock.id ? <span className="tag">Wearing</span> : <button className="chip press on" style={{ fontSize: '0.8125rem', flexShrink: 0 }} onClick={() => { set({ moWear: unlock.id }); haptic('select'); }}>Put it on</button>}
         </div>
       ) : null}
-      <p style={{ alignSelf: 'flex-start', margin: '18px 0 12px', fontSize: 15, fontWeight: 800 }}>How do you feel now?</p>
+      {!moodOK(s) ? <div style={{ width: '100%' }}><NeedsChoice kind="mood" /></div> : <>
+      <p style={{ alignSelf: 'flex-start', margin: '18px 0 12px', fontSize: '0.9375rem', fontWeight: 800 }}>How do you feel now?</p>
       <div role="radiogroup" aria-label="How do you feel now" style={{ width: '100%', display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 12 }}>
         {Object.keys(MOOD_COLORS).map((m) => {
           const on = mood === m;
           return (
             <button key={m} type="button" role="radio" aria-checked={on} onClick={() => pickMood(m)} className="press"
-              style={{ minHeight: 76, padding: '10px 4px', borderRadius: 20, border: 0, background: 'var(--base)', boxShadow: on ? 'var(--down)' : 'var(--up-sm)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, fontSize: 13, fontWeight: 800, color: on ? 'var(--accent)' : 'var(--ink)', cursor: 'pointer' }}>
+              style={{ minHeight: 76, padding: '10px 4px', borderRadius: 20, border: 0, background: 'var(--base)', boxShadow: on ? 'var(--down)' : 'var(--up-sm)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, fontSize: '0.8125rem', fontWeight: 800, color: on ? 'var(--accent)' : 'var(--ink)', cursor: 'pointer' }}>
               <span style={{ width: 22, height: 22, borderRadius: '50%', background: MOOD_COLORS[m] }} />{m}
             </button>
           );
@@ -395,18 +397,19 @@ export function Complete({ id, minutes = 12, timer, sound, onboarding = false, e
       </div>
       {mood === 'Restless' ? (
         <button className="btn-text" style={{ marginTop: 8 }} onClick={() => nav.push('support')}>Feeling restless is okay. Need more support?</button>
-      ) : mood ? <p className="muted" role="status" style={{ fontSize: 13, margin: '12px 0 0' }}>Thanks. Mo noted that you feel {mood.toLowerCase()}.</p> : null}
+      ) : mood ? <p className="muted" role="status" style={{ fontSize: '0.8125rem', margin: '12px 0 0' }}>Thanks. Mo noted that you feel {mood.toLowerCase()}.</p> : null}
+      </>}
       {place ? (
         <div className="pressed row" role="status" style={{ width: '100%', marginTop: 14, padding: '10px 10px 10px 14px', borderRadius: 20, gap: 10 }}>
           <Icon name={place.icon} size={20} style={{ color: 'var(--accent)', flexShrink: 0 }} />
-          <span className="grow" style={{ fontSize: 13, fontWeight: 700, lineHeight: 1.4, color: 'var(--body)' }}>Mo reached <b style={{ color: 'var(--ink)' }}>{place.name}</b>. A new chapter of your story is ready.</span>
-          {!onboarding ? <button className="chip press on" style={{ fontSize: 13, flexShrink: 0 }} onClick={() => { set({ tab: 'home' }); nav.reset('tabs'); nav.push('journey', { open: place.id }); }}>Read</button> : null}
+          <span className="grow" style={{ fontSize: '0.8125rem', fontWeight: 700, lineHeight: 1.4, color: 'var(--body)' }}>Mo reached <b style={{ color: 'var(--ink)' }}>{place.name}</b>. A new chapter of your story is ready.</span>
+          {!onboarding ? <button className="chip press on" style={{ fontSize: '0.8125rem', flexShrink: 0 }} onClick={() => { set({ tab: 'home' }); nav.reset('tabs'); nav.push('journey', { open: place.id }); }}>Read</button> : null}
         </div>
       ) : null}
       {prog ? (
         <div className="pressed row" role="status" style={{ width: '100%', marginTop: 14, padding: '12px 14px', borderRadius: 20, gap: 12 }}>
           <Icon name="layers" size={20} style={{ color: 'var(--accent)', flexShrink: 0 }} />
-          <span style={{ fontSize: 13, fontWeight: 700, lineHeight: 1.4, color: 'var(--body)' }}>
+          <span style={{ fontSize: '0.8125rem', fontWeight: 700, lineHeight: 1.4, color: 'var(--body)' }}>
             {ses.day >= prog.days.length ? `${prog.title} complete. Mo is proud of you.` : `Day ${ses.day} of ${prog.days.length} done. Day ${ses.day + 1} is ready${prog.plus && !s.user.plus ? ' with Still Plus' : ' tomorrow, or whenever you are'}.`}
           </span>
         </div>
