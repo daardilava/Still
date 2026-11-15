@@ -154,7 +154,7 @@ export function ComposeEntry() {
     <button className="pressed press row" onClick={() => nav.push('compose')}
       style={{ width: '100%', marginTop: 12, border: 0, borderRadius: 22, padding: '0 16px', minHeight: 56, gap: 10, textAlign: 'left', cursor: 'pointer', color: 'var(--muted)' }}>
       <Icon name="sparkle" size={18} style={{ color: 'var(--accent)', flexShrink: 0 }} />
-      <span className="grow" style={{ fontSize: '0.9375rem', fontWeight: 600 }}>Or tell Mo how you are right now…</span>
+      <span className="grow" style={{ fontSize: '0.9375rem', fontWeight: 600 }}>How are you feeling right now?</span>
       <span className="tag" style={{ fontSize: '0.6875rem' }}>AI</span>
     </button>
   );

@@ -191,7 +191,7 @@ export function SignUp() {
   return (
     <form className="pad" onSubmit={submit} noValidate>
       <TopBar title="Create account" />
-      <Field label="Your name" value={name} onChange={setName} autoComplete="given-name" placeholder="[YOUR NAME]" error={touched ? errs.name : ''} />
+      <Field label="Your name" value={name} onChange={setName} autoComplete="given-name" placeholder="e.g. Sam" error={touched ? errs.name : ''} />
       <Field label="Email" type="email" value={email} onChange={setEmail} autoComplete="email" inputMode="email" placeholder="you@example.com" error={touched ? errs.email : ''} />
       <Field label="Password" type="password" value={pw} onChange={setPw} autoComplete="new-password" hint="At least 8 characters." error={touched ? errs.pw : ''} />
       <div className="grow" style={{ minHeight: 24 }} />
@@ -356,7 +356,7 @@ export function Paywall({ source, name }) {
     set({ user: { ...s.user, plus: true } });
     dialog({ title: 'Welcome to Still Plus', message: 'Mo unlocked every session, program and story for you. Enjoy the quiet.', actions: [{ label: 'Lovely', bold: true, onPress: close }] });
   };
-  const perks = [['layers', 'Programs: 7 nights to better sleep and more'], ['book', 'Sleep stories and unlimited soundscapes'], ['sparkle', 'Unlimited sessions made for you by Mo'], ['sparkle', 'Every session, with new ones weekly'], ['pulse', 'All breathing rhythms with Mo'], ['target', 'Deeper insights on mood and minutes']];
+  const perks = [['layers', 'Programs: 7 nights to better sleep and more'], ['book', 'Sleep stories and unlimited soundscapes'], ['sparkle', 'Unlimited sessions made for you by Mo'], ['rew', 'Every session, with new ones weekly'], ['pulse', 'All breathing rhythms with Mo'], ['target', 'Deeper insights on mood and minutes']];
   const lead = {
     program: `Keep going with ${name || 'this program'}. Day 1 was on us.`,
     story: `${name || 'This story'} and every sleep story are part of Plus.`,
@@ -399,8 +399,8 @@ export function Paywall({ source, name }) {
         ))}
       </div>
       <div role="radiogroup" aria-label="Plan" className="col" style={{ gap: 16, marginTop: 22 }}>
-        <Plan id="year" title="Yearly" price="[PRICE]/yr" note="7 days free, then billed yearly" badge="Best value" />
-        <Plan id="month" title="Monthly" price="[PRICE]/mo" note="Billed monthly, cancel anytime" />
+        <Plan id="year" title="Yearly" price="$59.99/yr" note="7 days free, then $59.99 a year (about $5 a month)" badge="Best value" />
+        <Plan id="month" title="Monthly" price="$9.99/mo" note="Billed monthly, cancel anytime" />
       </div>
       {plan === 'year' && !s.user.plus ? (
         <div className="pressed" style={{ marginTop: 18, padding: '12px 16px', borderRadius: 22 }}>

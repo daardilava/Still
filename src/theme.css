@@ -9,10 +9,13 @@ img{display:block}
 .theme-light{
   --base:#E9E5F3;--ink:#1F1838;--muted:#5F5878;--body:#433C5C;--accent:#4A24B0;--accent2:#5B32C4;
   --primary:#5B32C4;--onp:#FFFFFF;--danger:#B3123A;--ok:#1E7A55;--line:rgba(136,120,184,.25);--dim:#A894E8;
-  --up:-6px -6px 14px rgba(255,255,255,.95),6px 6px 16px rgba(136,120,184,.42);
-  --up-sm:-3px -3px 8px rgba(255,255,255,.95),3px 3px 8px rgba(136,120,184,.42);
-  --down:inset 4px 4px 10px rgba(136,120,184,.42),inset -4px -4px 10px rgba(255,255,255,.9);
-  --down-sm:inset 2px 2px 5px rgba(136,120,184,.42),inset -2px -2px 5px rgba(255,255,255,.9);
+  /* Light mode edges, like dark mode's: controls, inputs and tracks get a 1px #857BA8 edge
+     (3.1:1 on the base, WCAG 1.4.11). Cards are identified by their text, so they get a softer hairline. */
+  --up:0 0 0 1px rgba(133,123,168,.28),-6px -6px 14px rgba(255,255,255,.95),6px 6px 16px rgba(136,120,184,.42);
+  --up-sm:0 0 0 1px #857BA8,-3px -3px 8px rgba(255,255,255,.95),3px 3px 8px rgba(136,120,184,.42);
+  --lift-sm:-3px -3px 8px rgba(255,255,255,.95),3px 3px 8px rgba(136,120,184,.42);
+  --down:inset 0 0 0 1px #857BA8,inset 4px 4px 10px rgba(136,120,184,.42),inset -4px -4px 10px rgba(255,255,255,.9);
+  --down-sm:inset 0 0 0 1px #857BA8,inset 2px 2px 5px rgba(136,120,184,.42),inset -2px -2px 5px rgba(255,255,255,.9);
   --glow:0 8px 22px rgba(91,50,196,.32);--scrim:rgba(40,28,80,.38);--sheet-shadow:0 -12px 30px rgba(40,28,80,.18);
   color-scheme:light;
 }
@@ -22,6 +25,8 @@ img{display:block}
   /* dark mode adds a 1px edge (#6E62A0, 3.2:1 on the base) so controls meet WCAG 1.4.11 */
   --up:0 0 0 1px #6E62A0,-6px -6px 14px rgba(72,60,122,.40),6px 6px 16px rgba(4,2,12,.80);
   --up-sm:0 0 0 1px #6E62A0,-3px -3px 8px rgba(72,60,122,.40),3px 3px 8px rgba(4,2,12,.75);
+  /* solid primary buttons already contrast with the base, so their lift has no edge */
+  --lift-sm:-3px -3px 8px rgba(72,60,122,.40),3px 3px 8px rgba(4,2,12,.75);
   --down:inset 0 0 0 1px #6E62A0,inset 4px 4px 10px rgba(4,2,12,.75),inset -4px -4px 10px rgba(72,60,122,.35);
   --down-sm:inset 0 0 0 1px #6E62A0,inset 2px 2px 5px rgba(4,2,12,.75),inset -2px -2px 5px rgba(72,60,122,.35);
   --glow:0 8px 22px rgba(124,90,232,.45);--scrim:rgba(4,2,12,.62);--sheet-shadow:0 -12px 30px rgba(0,0,0,.4);
@@ -69,7 +74,7 @@ img{display:block}
 .col{display:flex;flex-direction:column}
 .grow{flex-grow:1}
 .btn{border:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:700;text-decoration:none}
-.btn-primary{height:58px;border-radius:29px;background:var(--primary);color:var(--onp);font-size:1.0625rem;box-shadow:var(--up-sm),var(--glow);width:100%}
+.btn-primary{height:58px;border-radius:29px;background:var(--primary);color:var(--onp);font-size:1.0625rem;box-shadow:var(--lift-sm),var(--glow);width:100%}
 .btn-primary:disabled{background:var(--base);color:var(--muted);box-shadow:var(--down);cursor:not-allowed}
 .btn-soft{height:56px;border-radius:28px;background:var(--base);box-shadow:var(--up-sm);color:var(--ink);font-size:1rem;width:100%}
 .btn-text{background:none;border:0;min-height:48px;padding:0 14px;color:var(--accent);font-weight:700;font-size:0.9375rem;cursor:pointer;align-self:center}
@@ -286,3 +291,7 @@ h1[tabindex="-1"]:focus,h2[tabindex="-1"]:focus,[data-sid]:focus{outline:none}
 .native-shell .stage{padding:0;display:block;min-height:0;height:100%}
 .native-shell .phone{width:100vw;height:100vh;height:100dvh;border-radius:0;box-shadow:none;--safe-top:calc(var(--native-top,24px) + 8px);--safe-bottom:calc(var(--native-bottom,0px) + 10px)}
 .native-shell .phone-notch,.native-shell .home-ind,.native-shell .devpanel{display:none}
+
+/* Sticky top bar for long screens that auto-scroll (e.g. Journey): keeps Back and the title on screen and
+   covers the status bar area so content never shows under the clock. Use inside .pad. */
+.sticky-top{position:sticky;top:0;z-index:6;background:var(--base);margin:calc(-1 * (var(--safe-top) + 4px)) -24px 0;padding:calc(var(--safe-top) + 4px) 24px 10px}

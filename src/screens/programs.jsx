@@ -8,6 +8,7 @@ import { SleepSheet } from './session.jsx';
 import { QuietLabel } from './quiet.jsx';
 import { MoreSheet } from './more.jsx';
 import { OptionList } from '../ui.jsx';
+import { setAmbience, stopAmbience, mixFor, warmAmbience } from '../sound.js';
 
 const PlusTag = () => <span className="tag plus"><Icon name="crown" size={11} sw={2.4} />Plus</span>;
 const FreeTag = () => <span className="tag">Free</span>;
@@ -84,6 +85,9 @@ export function Story({ id }) {
   const [elapsed, setElapsed] = useState(0);
   const [playing, setPlaying] = useState(true);
   const [bg, setBg] = useState('Rain');
+  /* The background sound plays softly under the story and fades with pause and on exit. */
+  useEffect(() => { if (playing) setAmbience(mixFor(bg, s.mixes, 40), 2); else stopAmbience(0.8); }, [playing, bg]);
+  useEffect(() => () => stopAmbience(2.5), []);
   const [showText, setShowText] = useState(false);
   /* Sleep timer: stop (with a fade in the real app) some minutes after it was set. */
   const [stop, setStop] = useState({ label: 'Off', at: null });
@@ -188,6 +192,9 @@ export function MixSheet({ edit }) {
   });
   const put = (k) => (v) => setMix({ ...mix, [k]: v });
   const fmtv = (v) => (v === 0 ? 'Off' : v + '%');
+  /* Hear the blend while you shape it; it fades out when the sheet closes. */
+  useEffect(() => { setAmbience(mix, 0.4); }, [mix.rain, mix.forest, mix.ocean]);
+  useEffect(() => () => stopAmbience(1), []);
   const ok = name.trim().length > 0 && (mix.rain + mix.forest + mix.ocean) > 0;
   return (
     <>
@@ -230,6 +237,7 @@ export function SleepTab() {
   const openStory = (st) => (st.plus && !plus ? nav.push('paywall', { source: 'story', name: st.title }) : nav.push('story', { id: st.id }));
   const newMix = () => (mixes.length >= 1 && !plus ? nav.push('paywall', { source: 'mix' }) : sheet(<MixSheet />));
   const playMix = (m) => nav.push('player', { timer: true, minutes: 30, sound: m.name });
+  useEffect(() => { warmAmbience(['rain', 'forest', 'ocean']); }, []);
   return (
     <div className="pad-tabs">
       <h1 className="h1">Sleep</h1>
@@ -358,15 +366,23 @@ export function PlanCard() {
   const plan = dailyPlan(s);
   const title = plan.kind === 'program' ? plan.title : plan.kind === 'story' ? findStory(plan.id).title : plan.kind === 'practice' ? findPractice(plan.id).name : findSession(plan.id).title;
   const go = () => (plan.kind === 'program' ? nav.push('program', { id: plan.id }) : plan.kind === 'story' ? nav.push('story', { id: plan.id }) : plan.kind === 'practice' ? nav.push('practice', { id: plan.id }) : nav.push('session', { id: plan.id }));
+  /* Home's hero: the one thing to do today, with the streak beside it and a single Begin button. */
   return (
-    <button className="raised press row" onClick={go} style={{ marginTop: 16, width: '100%', border: 0, borderRadius: 26, padding: '14px 14px', gap: 12, textAlign: 'left', cursor: 'pointer', color: 'var(--ink)' }}>
-      <span className="pressed" style={{ width: 52, height: 52, borderRadius: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent)', flexShrink: 0 }}><Icon name={plan.kind === 'program' ? 'layers' : plan.kind === 'story' ? 'book' : plan.kind === 'practice' ? 'leaf' : 'sparkle'} size={22} /></span>
-      <span className="col grow" style={{ gap: 3, minWidth: 0 }}>
-        <span className="muted" style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '.06em', textTransform: 'uppercase' }}>Mo’s plan for today</span>
-        <span style={{ fontWeight: 800, fontSize: '1rem', lineHeight: 1.25 }}>{title}</span>
-        <span className="muted" style={{ fontSize: '0.8125rem', lineHeight: 1.35 }}>{plan.reason}</span>
-      </span>
-      <span style={{ width: 44, height: 44, borderRadius: '50%', background: 'var(--primary)', color: 'var(--onp)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name="play" size={15} /></span>
-    </button>
+    <section className="raised" aria-labelledby="plan-title" style={{ marginTop: 18, borderRadius: 28, padding: '16px 16px 16px' }}>
+      <div className="row" style={{ justifyContent: 'space-between', gap: 8 }}>
+        <span className="muted" style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '.06em', textTransform: 'uppercase' }}>Today’s plan</span>
+        <span className="tag">{s.streak ? `Day ${s.streak} streak` : 'Start your streak'}</span>
+      </div>
+      <div className="row" style={{ gap: 14, marginTop: 12 }}>
+        <span className="pressed" style={{ width: 56, height: 56, borderRadius: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent)', flexShrink: 0 }}><Icon name={plan.kind === 'program' ? 'layers' : plan.kind === 'story' ? 'book' : plan.kind === 'practice' ? 'leaf' : 'sparkle'} size={24} /></span>
+        <span className="col grow" style={{ gap: 4, minWidth: 0 }}>
+          <h2 id="plan-title" style={{ margin: 0, fontWeight: 800, fontSize: '1.1875rem', lineHeight: 1.22, letterSpacing: '-.01em' }}>{title}</h2>
+          <span className="muted" style={{ fontSize: '0.8125rem', lineHeight: 1.4 }}>{plan.reason}</span>
+        </span>
+      </div>
+      <button className="btn btn-primary press" onClick={go} style={{ marginTop: 16, height: 54 }} aria-describedby="plan-title">
+        <Icon name="play" size={15} />Begin
+      </button>
+    </section>
   );
 }

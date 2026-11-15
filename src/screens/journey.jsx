@@ -92,7 +92,7 @@ export function Journey({ open }) {
   const H = (JOURNEY.length - 1) * ROW + 100;
   return (
     <div className="pad">
-      <TopBar title="Mo’s journey" />
+      <div className="sticky-top"><TopBar title="Mo’s journey" /></div>
       <div className="raised" style={{ marginTop: 16, padding: '14px 16px', borderRadius: 24 }}>
         <div className="row" style={{ justifyContent: 'space-between' }}>
           <span style={{ fontWeight: 800, fontSize: '1rem' }}>{here.name}</span>
@@ -216,7 +216,6 @@ export function TapMo({ tip }) {
         <span key={n} className={n ? 'mo-poke' : ''} style={{ display: 'flex' }}><Mo size={84} mood={n ? moods[i] : s.streak >= 7 ? 'happy' : 'calm'} label="" /></span>
       </button>
       <span className="col grow" style={{ gap: 5, minWidth: 0 }}>
-        <span className="tag" style={{ alignSelf: 'flex-start' }}>{s.streak ? `Day ${s.streak} streak` : 'Start your streak today'}</span>
         <span aria-live="polite" key={n} className={n ? 'bubble-in' : ''} style={{ fontSize: '0.9375rem', lineHeight: 1.4, fontWeight: 700, color: 'var(--ink)' }}>{n ? lines[i] : idle}</span>
         {!n && asked ? <button className="chip press on" style={{ alignSelf: 'flex-start', fontSize: '0.875rem', minHeight: 44 }} onClick={() => sheet(<QuestionSheet />)}>Answer Mo</button>
           : !n ? <span className="muted" style={{ fontSize: '0.75rem', fontWeight: 700 }}>Tap Mo to say hi</span> : null}
