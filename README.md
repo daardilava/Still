@@ -23,6 +23,8 @@ npm run setup        # installs the SDK 58 versions of React Native, Expo Router
 npx expo start       # shows a QR code
 ```
 
+On Windows you can instead double-click `scripts/setup-windows.cmd` (download it from this repo): it checks Node and Git, clones into `Documents\Still`, installs, opens VS Code and starts Expo.
+
 - **Android:** open Expo Go › *Scan QR code*.
 - **iPhone:** scan the QR code with the Camera app.
 - Different networks or a strict Wi-Fi? Use `npm run tunnel` instead of `npx expo start`.
