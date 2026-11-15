@@ -1,4 +1,5 @@
-export const IMG = { room: 'img/room.svg', night: 'img/night.svg', land: 'img/landscape.svg' };
+import { ROOM, NIGHT, LAND } from './images.js';
+export const IMG = { room: ROOM, night: NIGHT, land: LAND };
 
 export const SESSIONS = [
   { id: 'unwind', title: 'Unwind into Evening', cat: 'Sleep', lengths: [6, 12, 20], img: IMG.room, pos: 'center 60%', plus: false,

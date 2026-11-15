@@ -2,3 +2,7 @@ node_modules/
 public/artifact.html
 .DS_Store
 *.log
+.expo/
+mobile/dist/
+mobile/ios/
+mobile/android/

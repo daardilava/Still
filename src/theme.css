@@ -1,5 +1,3 @@
-/* Figtree, self-hosted (no request to Google). Put Figtree-Variable.woff2 in public/fonts/ (free, SIL OFL: fonts.google.com/specimen/Figtree). Until then the phone's system font is used. */
-@font-face{font-family:'Figtree';src:url('fonts/Figtree-Variable.woff2') format('woff2-variations'),url('fonts/Figtree-Variable.woff2') format('woff2');font-weight:300 900;font-style:normal;font-display:swap}
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;background:#d7d1e8;font-family:'Figtree',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
 body.page-dark{background:#0f0b1e}
@@ -282,3 +280,9 @@ textarea:focus-visible,input[type=search]:focus-visible{outline:3px solid var(--
 
 /* Headings receive focus when a screen opens (so screen readers announce it); no visual ring needed there. */
 h1[tabindex="-1"]:focus,h2[tabindex="-1"]:focus,[data-sid]:focus{outline:none}
+
+/* Running inside the Expo app: always full screen, real safe areas from the phone, no fake notch or desktop panel. */
+.native-shell,.native-shell body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none}
+.native-shell .stage{padding:0;display:block;min-height:0;height:100%}
+.native-shell .phone{width:100vw;height:100vh;height:100dvh;border-radius:0;box-shadow:none;--safe-top:calc(var(--native-top,24px) + 8px);--safe-bottom:calc(var(--native-bottom,0px) + 10px)}
+.native-shell .phone-notch,.native-shell .home-ind,.native-shell .devpanel{display:none}

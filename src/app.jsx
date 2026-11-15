@@ -110,7 +110,10 @@ const visibleFocusables = (root) => [...root.querySelectorAll(FOCUSABLE)].filter
 
 let uid = 1;
 
-export function App() {
+/* When Still runs inside the Expo app (a DOM component), the native shell provides these. */
+const native = () => (typeof window !== 'undefined' && window.__stillNative) || null;
+
+export function App({ nativeScheme } = {}) {
   const [s, setS] = useState(load);
   const [stack, setStack] = useState([{ id: uid++, name: 'splash', params: {} }]);
   const [sheetEl, setSheetEl] = useState(null);
@@ -185,6 +188,13 @@ export function App() {
     reset: (name, params = {}) => { setSheetEl(null); setStack([{ id: uid++, name, params }]); }
   }), []);
 
+  /* Native shell: use the phone's real platform and appearance; keep the status bar in sync with the theme. */
+  useEffect(() => {
+    const n = native();
+    if (n) set({ platform: n.platform === 'ios' ? 'ios' : 'android', deviceAppearance: (nativeScheme || n.scheme) === 'dark' ? 'dark' : 'light' });
+  }, [nativeScheme]);
+  useEffect(() => { const n = native(); if (n && n.onTheme) n.onTheme(!!dark).catch(() => {}); }, [dark]);
+
   const toast = useCallback((msg) => {
     clearTimeout(toastTimer.current);
     setToastMsg({ msg, k: uid++ });
@@ -192,7 +202,10 @@ export function App() {
   }, []);
 
   const haptic = useCallback((kind) => {
-    if (!s.haptics || typeof navigator === 'undefined' || !navigator.vibrate) return;
+    if (!s.haptics) return;
+    const n = native();
+    if (n && n.haptic) { n.haptic(kind).catch(() => {}); return; }
+    if (typeof navigator === 'undefined' || !navigator.vibrate) return;
     try { navigator.vibrate(kind === 'success' ? [12, 60, 18] : 8); } catch (e) { /* ignore */ }
   }, [s.haptics]);
 
@@ -223,6 +236,15 @@ export function App() {
   }, [layerOpen]);
 
   registerCustom(s.aiSessions);
+  if (typeof window !== 'undefined') {
+    window.__stillBack = () => {
+      if (dialogCfg) { setDialogCfg(null); return; }
+      if (sheetEl) { setSheetEl(null); return; }
+      if (stack.length > 1) { nav.back(); return; }
+      if (stack[0].name === 'tabs' && s.tab && s.tab !== 'home') { set({ tab: 'home' }); return; }
+      const n = native(); if (n && n.exitApp) n.exitApp().catch(() => {});
+    };
+  }
   const top = stack[stack.length - 1];
   const def = SCREENS[top.name] || SCREENS.tabs;
 

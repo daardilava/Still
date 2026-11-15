@@ -8,11 +8,32 @@ on localhost they use a built-in writer and nothing leaves your machine.
 
 Version history and feature notes for each version (v2 to v10) are further down.
 
+## Try it on your phone (Expo Go, Android and iPhone)
+
+The `mobile/` folder is an Expo app (SDK 58) that runs the whole prototype on a real phone.
+
+**You need:** Node.js 22.13+ or 24.3+ (even versions), Git, and the **Expo Go** app on your phone
+(Play Store / App Store). Phone and computer on the same Wi-Fi.
+
+```bash
+git clone https://github.com/daardilava/Still.git
+cd Still/mobile
+npm install
+npm run setup        # installs the SDK 58 versions of React Native, Expo Router, WebView, haptics…
+npx expo start       # shows a QR code
+```
+
+- **Android:** open Expo Go › *Scan QR code*.
+- **iPhone:** scan the QR code with the Camera app.
+- Different networks or a strict Wi-Fi? Use `npm run tunnel` instead of `npx expo start`.
+- Windows may ask to allow Node.js through the firewall: allow it on private networks.
+- Edits to `src/` reload on the phone automatically. The plan for rebuilding screens natively is in `mobile/MIGRATION.md`.
+
 ## Rebuild after editing `src/`
 
 `npm install` then `npm run build` (esbuild bundles `src/` into `public/app.js`).
 
-## Run it on localhost (no install needed)
+## Run the web prototype on localhost (no install needed)
 
 The app is already built in `public/`. Pick one:
 
